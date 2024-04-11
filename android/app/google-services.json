@@ -12,7 +12,12 @@
           "package_name": "com.example.skriftes_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "544981007133-v4vudr0c5rkgdnq40n2n84g09tpi1ftq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAzScQwhzyK6sCqX1diG3uqwAdj_R26RS8"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544981007133-v4vudr0c5rkgdnq40n2n84g09tpi1ftq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "544981007133-80ukj2u8b45nkhnbreuqnmmuk2a8u2n4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.skriftesProject"
+              }
+            }
+          ]
         }
       }
     }
