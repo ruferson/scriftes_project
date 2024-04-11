@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "544981007133",
+    "project_id": "skriftes-qa",
+    "storage_bucket": "skriftes-qa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544981007133:android:325a13b9eeae11d7677ff4",
+        "android_client_info": {
+          "package_name": "com.example.skriftes_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzScQwhzyK6sCqX1diG3uqwAdj_R26RS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
