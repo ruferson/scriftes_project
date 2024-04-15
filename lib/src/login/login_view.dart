@@ -7,9 +7,9 @@ import 'package:skriftes_project/src/settings/settings_controller.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({
-    super.key,
+    Key? key, // Añadido el parámetro de la clave
     required this.controller,
-  });
+  }) : super(key: key); // Utilizando la clave en el constructor
 
   final SettingsController controller;
 
@@ -74,137 +74,144 @@ class _LoginViewState extends State<LoginView> {
           ColorName.primaryColor,
           widget.controller.themeMode,
         ),
-        padding: const EdgeInsets.only(
-            top: 48.0, right: 48.0, left: 48.0, bottom: 48.0),
+        padding: const EdgeInsets.all(48.0),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Inicio de sesión",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-                color: ColorRepository.getColor(
-                  ColorName.textColor,
-                  widget.controller.themeMode,
-                ),
-              ),
-            ),
-            const SizedBox(height: 28),
-            TextFormField(
-              controller: _emailController,
-              cursorColor: ColorRepository.getColor(
-                ColorName.textColor,
-                widget.controller.themeMode,
-              ),
-              decoration: InputDecoration(
-                labelText: 'E-mail',
-                border: const OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: ColorRepository.getColor(
-                      ColorName.specialColor,
-                      widget.controller.themeMode,
-                    ),
-                    width: 2,
-                  ),
-                ),
-                labelStyle: TextStyle(
+        child: SingleChildScrollView(
+          // Envuelve tu contenido en un SingleChildScrollView
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Inicio de sesión",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
                   color: ColorRepository.getColor(
                     ColorName.textColor,
                     widget.controller.themeMode,
                   ),
                 ),
               ),
-              style: TextStyle(
-                color: ColorRepository.getColor(
+              const SizedBox(height: 28),
+              TextFormField(
+                controller: _emailController,
+                cursorColor: ColorRepository.getColor(
                   ColorName.textColor,
                   widget.controller.themeMode,
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: true,
-              cursorColor: ColorRepository.getColor(
-                ColorName.textColor,
-                widget.controller.themeMode,
-              ),
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                border: const OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                decoration: InputDecoration(
+                  labelText: 'E-mail',
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: ColorRepository.getColor(
+                        ColorName.specialColor,
+                        widget.controller.themeMode,
+                      ),
+                      width: 2,
+                    ),
+                  ),
+                  labelStyle: TextStyle(
                     color: ColorRepository.getColor(
-                      ColorName.specialColor,
+                      ColorName.textColor,
                       widget.controller.themeMode,
                     ),
-                    width: 2,
                   ),
                 ),
-                labelStyle: TextStyle(
+                style: TextStyle(
                   color: ColorRepository.getColor(
                     ColorName.textColor,
                     widget.controller.themeMode,
                   ),
                 ),
               ),
-              style: TextStyle(
-                color: ColorRepository.getColor(
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                cursorColor: ColorRepository.getColor(
                   ColorName.textColor,
                   widget.controller.themeMode,
                 ),
-              ),
-            ),
-            const SizedBox(height: 14),
-            Text(
-              loginMsg,
-              style: TextStyle(color: const Color.fromARGB(255, 143, 26, 26)),
-            ),
-            const SizedBox(height: 14),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _signInWithEmailAndPassword();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(
-                      ColorRepository.getColor(
+                decoration: InputDecoration(
+                  labelText: 'Contraseña',
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: ColorRepository.getColor(
                         ColorName.specialColor,
                         widget.controller.themeMode,
                       ),
+                      width: 2,
                     ),
                   ),
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: ColorRepository.getColor(
-                        ColorName.white,
-                        widget.controller.themeMode,
-                      ),
+                  labelStyle: TextStyle(
+                    color: ColorRepository.getColor(
+                      ColorName.textColor,
+                      widget.controller.themeMode,
                     ),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 36),
-            loading
-                ? Center(
-                  child: CircularProgressIndicator(
-                      color: ColorRepository.getColor(
-                        ColorName.specialColor,
-                        widget.controller.themeMode,
+                style: TextStyle(
+                  color: ColorRepository.getColor(
+                    ColorName.textColor,
+                    widget.controller.themeMode,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                loginMsg,
+                style: TextStyle(color: const Color.fromARGB(255, 143, 26, 26)),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _signInWithEmailAndPassword();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                        ColorRepository.getColor(
+                          ColorName.specialColor,
+                          widget.controller.themeMode,
+                        ),
                       ),
                     ),
-                )
-                : Container(),
-          ],
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: ColorRepository.getColor(
+                          ColorName.white,
+                          widget.controller.themeMode,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              loading
+                  ? Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 16),
+                          CircularProgressIndicator(
+                            color: ColorRepository.getColor(
+                              ColorName.specialColor,
+                              widget.controller.themeMode,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );
