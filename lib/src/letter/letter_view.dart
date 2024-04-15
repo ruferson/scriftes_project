@@ -53,21 +53,55 @@ class _LettersViewState extends State<LettersView> {
                       color: ColorRepository.getColor(
                           ColorName.primaryColor, widget.controller.themeMode),
                       width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: SingleChildScrollView(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(height: 36),
-                              LetterContainer(controller: widget.controller),
-                              LetterContainer(controller: widget.controller),
-                              LetterContainer(controller: widget.controller),
-                              LetterContainer(controller: widget.controller),
-                              LetterContainer(controller: widget.controller),
-                              LetterContainer(controller: widget.controller),
-                              LetterContainer(controller: widget.controller),
-                              SizedBox(height: 36),
+                              Wrap(
+                                children: [
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                  LetterContainer(
+                                      controller: widget.controller),
+                                ],
+                              ),
                             ],
                           ),
                         ),

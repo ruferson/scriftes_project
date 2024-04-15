@@ -40,11 +40,7 @@ class LetterContainer extends StatefulWidget {
 
 class _LetterContainerState extends State<LetterContainer> {
   final Future<String> _calculation = getJson();
-  bool expanded = false;
   void onPressed() {
-    setState(() {
-      expanded = !expanded;
-    });
   }
 
   @override
@@ -95,7 +91,6 @@ class _LetterContainerState extends State<LetterContainer> {
                       textWidgets: textWidgets,
                       fragmentList: fragmentList,
                       controller: widget.controller,
-                      expanded: expanded,
                       onPressed: onPressed,
                     ),
                   ),
@@ -107,10 +102,12 @@ class _LetterContainerState extends State<LetterContainer> {
                     onPressed: () {
                       // Acción cuando se presiona el botón flotante
                     },
+                    mini: true,
                     backgroundColor: ColorRepository.getColor(
                         ColorName.specialColor, widget.controller.themeMode),
                     child: Icon(
                       Icons.open_in_full,
+                      size: 16,
                       color: ColorRepository.getColor(ColorName.secondaryColor,
                           widget.controller.themeMode),
                     ),
@@ -138,14 +135,12 @@ class Letter extends StatefulWidget {
     required this.textWidgets,
     required this.controller,
     required this.fragmentList,
-    required this.expanded,
     required this.onPressed,
   }) : super(key: key);
 
   final SettingsController controller;
   final List<Widget> textWidgets;
   final List<LetterItem> fragmentList;
-  final bool expanded;
   final void Function() onPressed;
 
   @override
@@ -160,13 +155,9 @@ class _LetterState extends State<Letter> {
       builder: (BuildContext context, Widget? child) {
         return GestureDetector(
           onTap: widget.onPressed,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-            height: widget.expanded
-                ? MediaQuery.of(context).size.height * 0.6
-                : 200,
-            width: MediaQuery.of(context).size.width * 0.7,
+          child: Container(
+            height: 80,
+            width: 140,
             decoration: BoxDecoration(
               color: ColorRepository.getColor(
                   ColorName.white, widget.controller.themeMode),
@@ -179,15 +170,7 @@ class _LetterState extends State<Letter> {
               ],
             ),
             padding: const EdgeInsets.all(24.0),
-            child: widget.expanded
-                ? SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget.textWidgets,
-                    ),
-                  )
-                : const Text("De Jose"),
+            child: const Text("De Jose"),
           ),
         );
       },
