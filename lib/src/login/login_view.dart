@@ -27,41 +27,45 @@ class _LoginViewState extends State<LoginView> {
   String loginMsg = "";
 
   Future<bool> _signInWithEmailAndPassword() async {
-    setState(() {
-      loading = true;
-      loginMsg = "";
-    });
-    try {
-      final UserCredential userCredential =
-          await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
+    if (mounted) {
+      setState(() {
+        loading = true;
+        loginMsg = "";
+      });
+      try {
+        final UserCredential userCredential =
+            await _auth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
 
-      final User? user = userCredential.user;
+        final User? user = userCredential.user;
 
-      if (user != null) {
+        if (user != null) {
+          setState(() {
+            loading = false;
+            loginMsg = "Redirigiendo...";
+          });
+          // Regresa true para indicar un inicio de sesión exitoso
+          return true;
+        } else {
+          setState(() {
+            loading = false;
+            loginMsg = "Correo o contraseña incorrectas.";
+          });
+          // Regresa false para indicar un inicio de sesión fallido
+          return false;
+        }
+      } catch (e) {
+        print('Error durante el inicio de sesión: $e');
+        // Maneja cualquier error que ocurra durante el inicio de sesión
         setState(() {
           loading = false;
-          loginMsg = "Redirigiendo...";
+          loginMsg = "Error en el inicio de sesión.";
         });
-        // Regresa true para indicar un inicio de sesión exitoso
-        return true;
-      } else {
-        setState(() {
-          loading = false;
-          loginMsg = "Correo o contraseña incorrectas.";
-        });
-        // Regresa false para indicar un inicio de sesión fallido
         return false;
       }
-    } catch (e) {
-      print('Error durante el inicio de sesión: $e');
-      // Maneja cualquier error que ocurra durante el inicio de sesión
-      setState(() {
-        loading = false;
-        loginMsg = "Error en el inicio de sesión.";
-      });
+    } else {
       return false;
     }
   }
