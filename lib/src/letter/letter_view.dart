@@ -14,9 +14,9 @@ Future<String> getFalseFutureString() async {
 /// Displays a list of SampleItems.
 class LettersView extends StatefulWidget {
   const LettersView({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   final SettingsController controller;
   Future<String> getFalseFutureString() async {

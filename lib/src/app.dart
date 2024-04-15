@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:skriftes_project/src/home/homeView.dart';
+import 'package:skriftes_project/src/home/home_view.dart';
 import 'package:skriftes_project/src/letter/letter_view.dart';
+import 'package:skriftes_project/src/login/login_view.dart';
 import 'package:skriftes_project/src/palette/color_repository.dart';
 
 import 'letter/letter_container.dart';
@@ -43,13 +45,56 @@ class _MyAppState extends State<MyApp> {
       case 3:
         return SettingsView(controller: settingsController);
       default:
-        return SizedBox(); // Return an empty SizedBox for unknown index
+        return const SizedBox(); // Return an empty SizedBox for unknown index
     }
   }
 
   @override
   Widget build(BuildContext context) {
     const double toolbarHeight = kToolbarHeight;
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+            return inApp(toolbarHeight);
+        } else {
+          if (snapshot.hasData) {
+            return inApp(toolbarHeight);
+          } else {
+            return loginPage(
+                toolbarHeight); // Usuario no autenticado, muestra la página de inicio de sesión
+          }
+        }
+      },
+    );
+  }
+
+  MaterialApp loginPage(double toolbarHeight) {
+    return MaterialApp(
+      restorationScopeId: 'app',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''), // English, no country code
+      ],
+      theme: ThemeData(), // No explicit theme defined, relying on default theme
+      darkTheme: ThemeData.dark(),
+      themeMode: widget.settingsController.themeMode,
+      home: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(toolbarHeight),
+          child: ScriftesAppBar(toolbarHeight: toolbarHeight, widget: widget),
+        ),
+        body: LoginView(controller: widget.settingsController),
+      ),
+    );
+  }
+
+  ListenableBuilder inApp(double toolbarHeight) {
     return ListenableBuilder(
       // Utilized ListenableBuilder for dynamic updates
       listenable: widget.settingsController,
@@ -71,8 +116,9 @@ class _MyAppState extends State<MyApp> {
           themeMode: widget.settingsController.themeMode,
           home: Scaffold(
             appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(toolbarHeight),
-              child: ScriftesAppBar(toolbarHeight: toolbarHeight, widget: widget),
+              preferredSize: Size.fromHeight(toolbarHeight),
+              child:
+                  ScriftesAppBar(toolbarHeight: toolbarHeight, widget: widget),
             ),
             body: _getBodyWidget(_selectedIndex, widget.settingsController),
             bottomNavigationBar: BottomNavigationBar(
@@ -101,7 +147,6 @@ class _MyAppState extends State<MyApp> {
               ],
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,
-              
               backgroundColor: ColorRepository.getColor(
                   ColorName.primaryColor, widget.settingsController.themeMode),
               selectedItemColor: ColorRepository.getColor(
@@ -146,8 +191,7 @@ class ScriftesAppBar extends StatelessWidget {
         centerTitle: true,
         toolbarHeight: toolbarHeight,
         backgroundColor: ColorRepository.getColor(
-            ColorName.primaryColor,
-            widget.settingsController.themeMode),
+            ColorName.primaryColor, widget.settingsController.themeMode),
         title: Image.asset(
           widget.settingsController.themeMode == ThemeMode.light
               ? 'assets/images/logo.png'

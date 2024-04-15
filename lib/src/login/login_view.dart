@@ -1,0 +1,212 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:skriftes_project/src/palette/color_repository.dart';
+import 'package:skriftes_project/src/settings/settings_controller.dart';
+
+class LoginView extends StatefulWidget {
+  const LoginView({
+    super.key,
+    required this.controller,
+  });
+
+  final SettingsController controller;
+
+  static const routeName = '/login';
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool loading = false;
+  String loginMsg = "";
+
+  Future<bool> _signInWithEmailAndPassword() async {
+    setState(() {
+      loading = true;
+      loginMsg = "";
+    });
+    try {
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        setState(() {
+          loading = false;
+          loginMsg = "Redirigiendo...";
+        });
+        // Regresa true para indicar un inicio de sesión exitoso
+        return true;
+      } else {
+        setState(() {
+          loading = false;
+          loginMsg = "Correo o contraseña incorrectas.";
+        });
+        // Regresa false para indicar un inicio de sesión fallido
+        return false;
+      }
+    } catch (e) {
+      print('Error durante el inicio de sesión: $e');
+      // Maneja cualquier error que ocurra durante el inicio de sesión
+      setState(() {
+        loading = false;
+        loginMsg = "Error en el inicio de sesión.";
+      });
+      return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: ColorRepository.getColor(
+          ColorName.primaryColor,
+          widget.controller.themeMode,
+        ),
+        padding: const EdgeInsets.only(
+            top: 48.0, right: 48.0, left: 48.0, bottom: 48.0),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Inicio de sesión",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+                color: ColorRepository.getColor(
+                  ColorName.textColor,
+                  widget.controller.themeMode,
+                ),
+              ),
+            ),
+            const SizedBox(height: 28),
+            TextFormField(
+              controller: _emailController,
+              cursorColor: ColorRepository.getColor(
+                ColorName.textColor,
+                widget.controller.themeMode,
+              ),
+              decoration: InputDecoration(
+                labelText: 'E-mail',
+                border: const OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: ColorRepository.getColor(
+                      ColorName.specialColor,
+                      widget.controller.themeMode,
+                    ),
+                    width: 2,
+                  ),
+                ),
+                labelStyle: TextStyle(
+                  color: ColorRepository.getColor(
+                    ColorName.textColor,
+                    widget.controller.themeMode,
+                  ),
+                ),
+              ),
+              style: TextStyle(
+                color: ColorRepository.getColor(
+                  ColorName.textColor,
+                  widget.controller.themeMode,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              cursorColor: ColorRepository.getColor(
+                ColorName.textColor,
+                widget.controller.themeMode,
+              ),
+              decoration: InputDecoration(
+                labelText: 'Contraseña',
+                border: const OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: ColorRepository.getColor(
+                      ColorName.specialColor,
+                      widget.controller.themeMode,
+                    ),
+                    width: 2,
+                  ),
+                ),
+                labelStyle: TextStyle(
+                  color: ColorRepository.getColor(
+                    ColorName.textColor,
+                    widget.controller.themeMode,
+                  ),
+                ),
+              ),
+              style: TextStyle(
+                color: ColorRepository.getColor(
+                  ColorName.textColor,
+                  widget.controller.themeMode,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              loginMsg,
+              style: TextStyle(color: const Color.fromARGB(255, 143, 26, 26)),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _signInWithEmailAndPassword();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                      ColorRepository.getColor(
+                        ColorName.specialColor,
+                        widget.controller.themeMode,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: ColorRepository.getColor(
+                        ColorName.white,
+                        widget.controller.themeMode,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 36),
+            loading
+                ? Center(
+                  child: CircularProgressIndicator(
+                      color: ColorRepository.getColor(
+                        ColorName.specialColor,
+                        widget.controller.themeMode,
+                      ),
+                    ),
+                )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+  }
+}

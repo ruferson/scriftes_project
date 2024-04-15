@@ -12,7 +12,7 @@ class SettingsService {
   
   Future<ThemeMode> themeMode() async {
     final SharedPreferences prefs = await _prefs;
-    ThemeMode theme = ThemeMode.system;
+    ThemeMode theme = ThemeMode.light;
     String? prefsTheme = prefs.getString('themeMode');
 
     switch (prefsTheme) {
@@ -22,11 +22,8 @@ class SettingsService {
       case "ThemeMode.light":
         theme = ThemeMode.light;
         break;
-      case "ThemeMode.system":
-        theme = ThemeMode.system;
-        break;
       default:
-        theme = ThemeMode.system;
+        theme = ThemeMode.light;
         break;
     }
 

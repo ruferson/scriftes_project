@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart'; // Importa el paquete de Firebase Auth
 import 'settings_controller.dart';
 
 /// Displays the various settings that can be customized by the user.
@@ -18,6 +18,17 @@ class SettingsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        actions: [
+          // Añade un icono de cerrar sesión en el AppBar
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () async {
+              // Cierra la sesión actual cuando se presiona el botón
+              await FirebaseAuth.instance.signOut();
+              // Puedes agregar cualquier lógica adicional aquí, como navegar a una nueva pantalla
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -31,10 +42,6 @@ class SettingsView extends StatelessWidget {
           // Call the updateThemeMode method any time the user selects a theme.
           onChanged: controller.updateThemeMode,
           items: const [
-            DropdownMenuItem(
-              value: ThemeMode.system,
-              child: Text('System Theme'),
-            ),
             DropdownMenuItem(
               value: ThemeMode.light,
               child: Text('Light Theme'),
