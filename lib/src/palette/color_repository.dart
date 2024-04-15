@@ -14,7 +14,7 @@ class ColorRepository {
   static final _lightColors = {
     ColorName.white: const Color(0xFFFFFFFF),
     ColorName.primaryColor: const Color(0xFFFEF5EF),
-    ColorName.secondaryColor: const Color(0x00FFF8E5),
+    ColorName.secondaryColor: Color.fromARGB(255, 255, 248, 229),
     ColorName.textColor: const Color(0xFF595959),
     ColorName.secondaryTextColor: const Color(0xFF919190),
     ColorName.specialColor: const Color(0xFFFF8370),

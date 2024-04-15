@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:skriftes_project/src/home/homeView.dart';
+import 'package:skriftes_project/src/letter/letter_view.dart';
 import 'package:skriftes_project/src/palette/color_repository.dart';
 
-import 'letter/letterView.dart';
+import 'letter/letter_container.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -27,6 +29,22 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Widget _getBodyWidget(
+      int selectedIndex, SettingsController settingsController) {
+    switch (selectedIndex) {
+      case 0:
+        return HomeView(controller: settingsController);
+      case 1:
+        return LettersView(controller: settingsController);
+      case 2:
+        return LettersView(controller: settingsController);
+      case 3:
+        return SettingsView(controller: settingsController);
+      default:
+        return SizedBox(); // Return an empty SizedBox for unknown index
+    }
   }
 
   @override
@@ -54,41 +72,26 @@ class _MyAppState extends State<MyApp> {
           home: Scaffold(
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(toolbarHeight),
-              child: Container(
-                decoration: const BoxDecoration(boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(41, 0, 0, 0),
-                    offset: Offset(0, 2.0),
-                    blurRadius: 4.0,
-                  )
-                ]),
-                child: AppBar(
-                  centerTitle: true,
-                  toolbarHeight: toolbarHeight,
-                  backgroundColor: ColorRepository.getColor(
-                  ColorName.primaryColor, widget.settingsController.themeMode),
-                  title: Image.asset(
-                    widget.settingsController.themeMode == ThemeMode.light
-                        ? 'assets/images/logo.png'
-                        : widget.settingsController.themeMode == ThemeMode.dark
-                            ? 'assets/images/dark_logo.png'
-                            : 'assets/images/logo.png',
-                    width: 180,
-                    semanticLabel: 'Scrifte\'s logo',
-                  ),
-                ),
-              ),
+              child: ScriftesAppBar(toolbarHeight: toolbarHeight, widget: widget),
             ),
-            body: _selectedIndex ==
-                    0 // Ternary operator for conditional rendering
-                ? LetterView(controller: widget.settingsController)
-                : SettingsView(controller: widget.settingsController),
+            body: _getBodyWidget(_selectedIndex, widget.settingsController),
             bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined),
                   activeIcon: Icon(Icons.home),
                   label: 'Inicio',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.mail_outline),
+                  activeIcon: Icon(Icons.mail),
+                  label: 'Mis Cartas',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.edit_outlined),
+                  activeIcon: Icon(Icons.edit),
+                  label: 'Escribir',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.settings_outlined),
@@ -98,6 +101,7 @@ class _MyAppState extends State<MyApp> {
               ],
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,
+              
               backgroundColor: ColorRepository.getColor(
                   ColorName.primaryColor, widget.settingsController.themeMode),
               selectedItemColor: ColorRepository.getColor(
@@ -114,6 +118,46 @@ class _MyAppState extends State<MyApp> {
           ),
         );
       },
+    );
+  }
+}
+
+class ScriftesAppBar extends StatelessWidget {
+  const ScriftesAppBar({
+    super.key,
+    required this.toolbarHeight,
+    required this.widget,
+  });
+
+  final double toolbarHeight;
+  final MyApp widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(boxShadow: [
+        BoxShadow(
+          color: Color.fromARGB(41, 0, 0, 0),
+          offset: Offset(0, 2.0),
+          blurRadius: 4.0,
+        )
+      ]),
+      child: AppBar(
+        centerTitle: true,
+        toolbarHeight: toolbarHeight,
+        backgroundColor: ColorRepository.getColor(
+            ColorName.primaryColor,
+            widget.settingsController.themeMode),
+        title: Image.asset(
+          widget.settingsController.themeMode == ThemeMode.light
+              ? 'assets/images/logo.png'
+              : widget.settingsController.themeMode == ThemeMode.dark
+                  ? 'assets/images/dark_logo.png'
+                  : 'assets/images/logo.png',
+          width: 180,
+          semanticLabel: 'Scrifte\'s logo',
+        ),
+      ),
     );
   }
 }

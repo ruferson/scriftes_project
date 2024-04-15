@@ -1,0 +1,196 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:skriftes_project/src/palette/color_repository.dart';
+import 'package:skriftes_project/src/settings/settings_controller.dart';
+
+Future<String> getJson() async {
+  return rootBundle.loadString('assets/json/carta.json');
+}
+
+class LetterItem {
+  final String text;
+  final Map<String, dynamic> styles;
+
+  LetterItem({required this.text, required this.styles});
+
+  factory LetterItem.fromJson(Map<String, dynamic> json) {
+    return LetterItem(
+      text: json['text'],
+      styles: json['styles'],
+    );
+  }
+}
+
+/// Displays a list of SampleItems.
+class LetterContainer extends StatefulWidget {
+  const LetterContainer({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final SettingsController controller;
+
+  static const routeName = '/';
+
+  @override
+  State<LetterContainer> createState() => _LetterContainerState();
+}
+
+class _LetterContainerState extends State<LetterContainer> {
+  final Future<String> _calculation = getJson();
+  bool expanded = false;
+  void onPressed() {
+    setState(() {
+      expanded = !expanded;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    getJson();
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (BuildContext context, Widget? child) {
+        return FutureBuilder<String>(
+          future: _calculation,
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.hasData) {
+              String textData = snapshot.data!;
+              List<Map<String, dynamic>> parsedJson = jsonDecode(textData)
+                  .map((jsonString) =>
+                      jsonDecode(jsonString) as Map<String, dynamic>)
+                  .cast<Map<String, dynamic>>()
+                  .toList();
+
+              List<LetterItem> fragmentList =
+                  parsedJson.map((json) => LetterItem.fromJson(json)).toList();
+
+              List<Widget> textWidgets = fragmentList.map((item) {
+                TextStyle textStyle = TextStyle(
+                  fontSize: item.styles['fontSize'] ?? 14.0,
+                  fontFamily: 'Arial',
+                  color: ColorRepository.getColor(
+                      ColorName.textColor, widget.controller.themeMode),
+                  letterSpacing: 1.0,
+                );
+
+                return Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      item.text,
+                      style: textStyle,
+                    ),
+                  ],
+                );
+              }).toList();
+
+              return Stack(children: [
+                SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.all(18),
+                    child: Letter(
+                      textWidgets: textWidgets,
+                      fragmentList: fragmentList,
+                      controller: widget.controller,
+                      expanded: expanded,
+                      onPressed: onPressed,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      // Acción cuando se presiona el botón flotante
+                    },
+                    backgroundColor: ColorRepository.getColor(
+                        ColorName.specialColor, widget.controller.themeMode),
+                    child: Icon(
+                      Icons.open_in_full,
+                      color: ColorRepository.getColor(ColorName.secondaryColor,
+                          widget.controller.themeMode),
+                    ),
+                  ),
+                ),
+              ]);
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: ColorRepository.getColor(
+                      ColorName.specialColor, widget.controller.themeMode),
+                ),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class Letter extends StatefulWidget {
+  const Letter({
+    Key? key,
+    required this.textWidgets,
+    required this.controller,
+    required this.fragmentList,
+    required this.expanded,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final SettingsController controller;
+  final List<Widget> textWidgets;
+  final List<LetterItem> fragmentList;
+  final bool expanded;
+  final void Function() onPressed;
+
+  @override
+  State<Letter> createState() => _LetterState();
+}
+
+class _LetterState extends State<Letter> {
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (BuildContext context, Widget? child) {
+        return GestureDetector(
+          onTap: widget.onPressed,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            height: widget.expanded
+                ? MediaQuery.of(context).size.height * 0.6
+                : 200,
+            width: MediaQuery.of(context).size.width * 0.7,
+            decoration: BoxDecoration(
+              color: ColorRepository.getColor(
+                  ColorName.white, widget.controller.themeMode),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromARGB(50, 0, 0, 0),
+                  offset: Offset(0, 2),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(24.0),
+            child: widget.expanded
+                ? SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: widget.textWidgets,
+                    ),
+                  )
+                : const Text("De Jose"),
+          ),
+        );
+      },
+    );
+  }
+}
