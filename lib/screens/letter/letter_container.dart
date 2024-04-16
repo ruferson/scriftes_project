@@ -17,9 +17,11 @@ class LetterContainer extends StatefulWidget {
   const LetterContainer({
     Key? key,
     required this.controller,
+    required this.letter,
   }) : super(key: key);
 
   final SettingsController controller;
+  final Letter letter;
 
   static const routeName = '/';
 
@@ -29,7 +31,13 @@ class LetterContainer extends StatefulWidget {
 
 class _LetterContainerState extends State<LetterContainer> {
   final Future<String> _calculation = getJson();
-  void onPressed() {}
+  void onPressed() {
+    FirebaseService().sendLetter("qLh7ol1UjMgiAaCs0q52auxDO672", [
+      LetterContent(
+          text: "Primer texto",
+          styles: textStyleToMap(const TextStyle(fontSize: 14.0)))
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +56,8 @@ class _LetterContainerState extends State<LetterContainer> {
                   .cast<Map<String, dynamic>>()
                   .toList();
 
-              List<LetterItem> fragmentList =
-                  parsedJson.map((json) => LetterItem.fromJson(json)).toList();
+              List<LetterContent> fragmentList =
+                  parsedJson.map((json) => LetterContent.fromJson(json)).toList();
 
               List<Widget> textWidgets = fragmentList.map((item) {
                 TextStyle textStyle = TextStyle(
@@ -76,8 +84,8 @@ class _LetterContainerState extends State<LetterContainer> {
               return Stack(children: [
                 SingleChildScrollView(
                   child: Container(
-                    margin: EdgeInsets.all(18),
-                    child: Letter(
+                    margin: const EdgeInsets.all(18),
+                    child: LetterWidget(
                       textWidgets: textWidgets,
                       fragmentList: fragmentList,
                       controller: widget.controller,
@@ -86,25 +94,14 @@ class _LetterContainerState extends State<LetterContainer> {
                   ),
                 ),
                 Positioned(
-                  top: 0,
-                  right: 0,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      FirebaseService()
-                          .sendLetter("qLh7ol1UjMgiAaCs0q52auxDO672", [
-                        LetterItem(
-                            text: "Primer texto",
-                            styles: textStyleToMap(TextStyle(fontSize: 14.0)))
-                      ]);
-                    },
-                    mini: true,
-                    backgroundColor: ColorRepository.getColor(
-                        ColorName.specialColor, widget.controller.themeMode),
+                  top: 24,
+                  right: 22,
+                  child: IgnorePointer(
+                    ignoring: true,
                     child: Icon(
                       Icons.open_in_full,
-                      size: 16,
-                      color: ColorRepository.getColor(ColorName.secondaryColor,
-                          widget.controller.themeMode),
+                      color: ColorRepository.getColor(
+                          ColorName.specialColor, widget.controller.themeMode),
                     ),
                   ),
                 ),
@@ -124,8 +121,8 @@ class _LetterContainerState extends State<LetterContainer> {
   }
 }
 
-class Letter extends StatefulWidget {
-  const Letter({
+class LetterWidget extends StatefulWidget {
+  const LetterWidget({
     Key? key,
     required this.textWidgets,
     required this.controller,
@@ -135,14 +132,14 @@ class Letter extends StatefulWidget {
 
   final SettingsController controller;
   final List<Widget> textWidgets;
-  final List<LetterItem> fragmentList;
+  final List<LetterContent> fragmentList;
   final void Function() onPressed;
 
   @override
-  State<Letter> createState() => _LetterState();
+  State<LetterWidget> createState() => _LetterState();
 }
 
-class _LetterState extends State<Letter> {
+class _LetterState extends State<LetterWidget> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -152,7 +149,7 @@ class _LetterState extends State<Letter> {
           onTap: widget.onPressed,
           child: Container(
             height: 80,
-            width: 140,
+            width: 160,
             decoration: BoxDecoration(
               color: ColorRepository.getColor(
                   ColorName.white, widget.controller.themeMode),

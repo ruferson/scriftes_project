@@ -9,12 +9,12 @@ class Location {
   Location(this.latitude, this.longitude);
 }
 
-class Letter {
+class SendingLetter {
   final DateTime sendingDate;
   final Location senderLocation;
   final Location receiverLocation;
 
-  Letter(this.sendingDate, this.senderLocation, this.receiverLocation);
+  SendingLetter(this.sendingDate, this.senderLocation, this.receiverLocation);
 }
 
 // Función para convertir grados a radianes
@@ -42,7 +42,7 @@ double calculateDistance(Location location1, Location location2) {
 }
 
 // Función para calcular la fecha de llegada de la carta
-DateTime calculateArrivalDate(Letter letter) {
+DateTime calculateArrivalDate(SendingLetter letter) {
   final distance = calculateDistance(
       letter.senderLocation, letter.receiverLocation); // Distancia en metros
   final daysToDeliver =
@@ -71,14 +71,14 @@ DateTime calculateArrivalDate(Letter letter) {
 }
 
 // Función para calcular el tiempo restante para la llegada de la carta
-Duration calculateTimeRemaining(Letter letter) {
+Duration calculateTimeRemaining(SendingLetter letter) {
   final currentDate = DateTime.now();
   final arrivalDate = calculateArrivalDate(letter);
   return arrivalDate.difference(currentDate);
 }
 
 // Función para calcular la distancia restante para la llegada de la carta
-double calculateDistanceRemaining(Letter letter) {
+double calculateDistanceRemaining(SendingLetter letter) {
   final distance = calculateDistance(
       letter.senderLocation, letter.receiverLocation); // Distancia en metros
   final currentDate = DateTime.now();

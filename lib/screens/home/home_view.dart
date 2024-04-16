@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -27,6 +28,27 @@ Future<String> getFalseFutureString() async {
 }
 
 class _HomeViewState extends State<HomeView> {
+    List<String> images = [
+      "assets/images/detailed_house.png",
+      "assets/images/undraw_friendship_mni7.png",
+      "assets/images/undraw_friends_r511_1.png",
+      "assets/images/undraw_taken_re_yn20_1.png",
+    ];
+
+    String selectRandomImage() {
+      Random random = Random();
+      int randomNumber = random.nextInt(100);
+
+      if (randomNumber < 60) {
+        return images[0];
+      } else if (randomNumber < 74) {
+        return images[1];
+      } else if (randomNumber < 88) {
+        return images[2];
+      } else {
+        return images[3];
+      }
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,8 +76,8 @@ class _HomeViewState extends State<HomeView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'assets/images/detailed_house.png',
-                              width: MediaQuery.of(context).size.width * 0.9,
+                              selectRandomImage(),
+                              width: MediaQuery.of(context).size.width * 0.8,
                               semanticLabel: 'House',
                             ),
                             const SizedBox(height: 48),

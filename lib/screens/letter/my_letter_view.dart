@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:skriftes_project/screens/letter/letter_container.dart';
 import 'package:skriftes_project/screens/letter/received_letters.dart';
 import 'package:skriftes_project/screens/letter/sent_letters.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
@@ -38,11 +34,13 @@ class _MyLettersViewState extends State<MyLettersView> {
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
+      animationDuration: const Duration(milliseconds: 600),
       child: Scaffold(
         backgroundColor: ColorRepository.getColor(
-              ColorName.primaryColor, widget.controller.themeMode),
-              
+            ColorName.primaryColor, widget.controller.themeMode),
         appBar: TabBar(
+          overlayColor: MaterialStatePropertyAll(ColorRepository.getColor(
+              ColorName.transpSpecialColor, widget.controller.themeMode)),
           labelColor: ColorRepository.getColor(
               ColorName.brownTextColor, widget.controller.themeMode),
           indicatorColor: ColorRepository.getColor(

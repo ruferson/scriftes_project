@@ -7,6 +7,7 @@ class FirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // Método para obtener el ID del usuario actualmente autenticado
   Future<String> getCurrentUserId() async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -15,6 +16,7 @@ class FirebaseService {
     throw Exception('User not logged in');
   }
 
+  // Método para obtener el ID del remitente de la carta
   Future<String> getSenderId() async {
     try {
       final userId = await getCurrentUserId();
@@ -31,6 +33,7 @@ class FirebaseService {
     }
   }
 
+  // Método para obtener la ubicación del usuario
   Future<GeoPoint> getUserLocation(String userId) async {
     try {
       final userSnapshot =
@@ -46,18 +49,20 @@ class FirebaseService {
     }
   }
 
-  Future<void> sendLetter(String recipientId, List<LetterItem> message) async {
+  // Método para enviar una carta
+  Future<void> sendLetter(
+      String recipientId, List<LetterContent> message) async {
     try {
       final senderId = await getSenderId();
       final senderLocation = await getUserLocation(senderId);
       final recipientLocation = await getUserLocation(recipientId);
 
-      var result = await _firestore.collection('letters').add({
+      await _firestore.collection('letters').add({
         'senderId': senderId,
         'recipientId': recipientId,
         'message': message.map((e) => ({"text": e.text, "styles": e.styles})),
         '_createdAt': DateTime.now(),
-        '_deliveredAt': calculateArrivalDate(Letter(
+        '_deliveredAt': calculateArrivalDate(SendingLetter(
             DateTime.now(),
             Location(senderLocation.latitude, senderLocation.longitude),
             Location(recipientLocation.latitude, recipientLocation.longitude))),
@@ -68,16 +73,55 @@ class FirebaseService {
     }
   }
 
-  Stream<List<DocumentSnapshot>> getLetters(String userId) {
+  // Método para obtener las cartas recibidas por el usuario
+  Future<List<Letter>> getReceivedLetters(String userId) {
     return _firestore
         .collection('letters')
         .where('recipientId', isEqualTo: userId)
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs);
+        .where('_deliveredAt', isLessThan: Timestamp.fromDate(DateTime.now()))
+        .orderBy('_createdAt', descending: true)
+        .get()
+        .then((querySnapshot) => _convertSnapshotToLetters(querySnapshot));
   }
 
+  // Método para obtener las cartas enviadas por el usuario
+  Future<List<Letter>> getSentLetters(String userId) {
+    return _firestore
+        .collection('letters')
+        .where('senderId', isEqualTo: userId)
+        .orderBy('_createdAt', descending: true)
+        .get()
+        .then((querySnapshot) => _convertSnapshotToLetters(querySnapshot));
+  }
+
+  // Método para convertir el snapshot de cartas en una lista de objetos Letter
+  List<Letter> _convertSnapshotToLetters(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      // Parsea los datos del documento a un objeto Letter
+      return Letter(
+        senderId: data['senderId'],
+        recipientId: data['recipientId'],
+        message: _convertMessage(data['message']),
+        createdAt: (data['_createdAt'] as Timestamp).toDate(),
+        deliveredAt: (data['_deliveredAt'] as Timestamp).toDate(),
+      );
+    }).toList();
+  }
+
+  // Método para convertir los datos del mensaje en una lista de objetos LetterItem
+  List<LetterContent> _convertMessage(List<dynamic> messageData) {
+    return messageData.map((item) {
+      return LetterContent(
+        text: item['text'] as String,
+        styles: item['styles'] as Map<String, dynamic>,
+      );
+    }).toList();
+  }
+
+  // Constructor de la clase FirebaseService
   FirebaseService();
 
+  // Método para inicializar Firebase
   Future<void> initFirebase() async {}
 }
