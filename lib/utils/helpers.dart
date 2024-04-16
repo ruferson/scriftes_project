@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/widgets.dart';
+
 class Location {
   final double latitude;
   final double longitude;
@@ -88,6 +90,15 @@ double calculateDistanceRemaining(Letter letter) {
   final remainingDistance = (distanceToTravel - remainingDays) * 45 * 1000;
   return remainingDistance;
 }
+
+  Map<String, dynamic> textStyleToMap(TextStyle textStyle) {
+    return {
+      'fontSize': textStyle.fontSize,
+      'fontWeight': textStyle.fontWeight?.index,
+      'fontStyle': textStyle.fontStyle?.index,
+      'color': textStyle.color?.value,
+    };
+  }
 
 /* void main() {
   // Ejemplo de uso

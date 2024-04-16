@@ -2,25 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:skriftes_project/src/palette/color_repository.dart';
-import 'package:skriftes_project/src/settings/settings_controller.dart';
+import 'package:skriftes_project/services/firebase_service.dart';
+import 'package:skriftes_project/services/models/letter.dart';
+import 'package:skriftes_project/themes/color_repository.dart';
+import 'package:skriftes_project/screens/settings/settings_controller.dart';
+import 'package:skriftes_project/utils/helpers.dart';
 
 Future<String> getJson() async {
   return rootBundle.loadString('assets/json/carta.json');
-}
-
-class LetterItem {
-  final String text;
-  final Map<String, dynamic> styles;
-
-  LetterItem({required this.text, required this.styles});
-
-  factory LetterItem.fromJson(Map<String, dynamic> json) {
-    return LetterItem(
-      text: json['text'],
-      styles: json['styles'],
-    );
-  }
 }
 
 /// Displays a list of SampleItems.
@@ -40,8 +29,7 @@ class LetterContainer extends StatefulWidget {
 
 class _LetterContainerState extends State<LetterContainer> {
   final Future<String> _calculation = getJson();
-  void onPressed() {
-  }
+  void onPressed() {}
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +53,9 @@ class _LetterContainerState extends State<LetterContainer> {
 
               List<Widget> textWidgets = fragmentList.map((item) {
                 TextStyle textStyle = TextStyle(
-                  fontSize: item.styles['fontSize'] ?? 14.0,
+                  fontSize: item.styles != null
+                      ? item.styles!['fontSize'] ?? 14.0
+                      : 14.0,
                   fontFamily: 'Arial',
                   color: ColorRepository.getColor(
                       ColorName.textColor, widget.controller.themeMode),
@@ -100,7 +90,12 @@ class _LetterContainerState extends State<LetterContainer> {
                   right: 0,
                   child: FloatingActionButton(
                     onPressed: () {
-                      // Acción cuando se presiona el botón flotante
+                      FirebaseService()
+                          .sendLetter("qLh7ol1UjMgiAaCs0q52auxDO672", [
+                        LetterItem(
+                            text: "Primer texto",
+                            styles: textStyleToMap(TextStyle(fontSize: 14.0)))
+                      ]);
                     },
                     mini: true,
                     backgroundColor: ColorRepository.getColor(

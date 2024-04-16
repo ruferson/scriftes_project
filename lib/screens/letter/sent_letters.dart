@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:skriftes_project/src/letter/letter_container.dart';
-import 'package:skriftes_project/src/palette/color_repository.dart';
-import 'package:skriftes_project/src/settings/settings_controller.dart';
+import 'package:skriftes_project/screens/letter/letter_container.dart';
+import 'package:skriftes_project/themes/color_repository.dart';
+import 'package:skriftes_project/screens/settings/settings_controller.dart';
 
 Future<String> getFalseFutureString() async {
   await Future.delayed(Duration.zero);
@@ -12,8 +12,8 @@ Future<String> getFalseFutureString() async {
 }
 
 /// Displays a list of SampleItems.
-class LettersView extends StatefulWidget {
-  const LettersView({
+class SentLettersView extends StatefulWidget {
+  const SentLettersView({
     super.key,
     required this.controller,
   });
@@ -27,10 +27,10 @@ class LettersView extends StatefulWidget {
   static const routeName = '/';
 
   @override
-  State<LettersView> createState() => _LettersViewState();
+  State<SentLettersView> createState() => _SentLettersViewState();
 }
 
-class _LettersViewState extends State<LettersView> {
+class _SentLettersViewState extends State<SentLettersView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

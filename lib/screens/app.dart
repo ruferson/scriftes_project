@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:skriftes_project/src/home/home_view.dart';
-import 'package:skriftes_project/src/letter/letter_view.dart';
-import 'package:skriftes_project/src/login/login_view.dart';
-import 'package:skriftes_project/src/palette/color_repository.dart';
+import 'package:skriftes_project/screens/home/home_view.dart';
+import 'package:skriftes_project/screens/letter/my_letter_view.dart';
+import 'package:skriftes_project/screens/letter/received_letters.dart';
+import 'package:skriftes_project/screens/login/login_view.dart';
+import 'package:skriftes_project/themes/color_repository.dart';
 
 import 'letter/letter_container.dart';
 import 'settings/settings_controller.dart';
@@ -39,9 +40,9 @@ class _MyAppState extends State<MyApp> {
       case 0:
         return HomeView(controller: settingsController);
       case 1:
-        return LettersView(controller: settingsController);
+        return MyLettersView(controller: settingsController);
       case 2:
-        return LettersView(controller: settingsController);
+        return SizedBox();
       case 3:
         return SettingsView(controller: settingsController);
       default:

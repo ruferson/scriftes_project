@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
-import 'package:skriftes_project/src/palette/color_repository.dart';
-import 'package:skriftes_project/src/settings/settings_controller.dart';
+import 'package:skriftes_project/themes/color_repository.dart';
+import 'package:skriftes_project/screens/settings/settings_controller.dart';
 
 /// Displays a list of SampleItems.
 class HomeView extends StatefulWidget {
