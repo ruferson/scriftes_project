@@ -47,7 +47,6 @@ DateTime calculateArrivalDate(SendingLetter letter) {
       letter.senderLocation, letter.receiverLocation); // Distancia en metros
   final daysToDeliver =
       distance / (45 * 1000); // Tiempo estimado de entrega en días
-
   final totalDays =
       daysToDeliver.ceil(); // Redondear hacia arriba al día más cercano
 
@@ -91,14 +90,14 @@ double calculateDistanceRemaining(SendingLetter letter) {
   return remainingDistance;
 }
 
-  Map<String, dynamic> textStyleToMap(TextStyle textStyle) {
-    return {
-      'fontSize': textStyle.fontSize,
-      'fontWeight': textStyle.fontWeight?.index,
-      'fontStyle': textStyle.fontStyle?.index,
-      'color': textStyle.color?.value,
-    };
-  }
+Map<String, dynamic> textStyleToMap(TextStyle textStyle) {
+  return {
+    'fontSize': textStyle.fontSize,
+    'fontWeight': textStyle.fontWeight?.index,
+    'fontStyle': textStyle.fontStyle?.index,
+    'color': textStyle.color?.value,
+  };
+}
 
 /* void main() {
   // Ejemplo de uso

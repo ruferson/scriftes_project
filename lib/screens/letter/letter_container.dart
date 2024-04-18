@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:skriftes_project/screens/letter/read_letter_view.dart';
 import 'package:skriftes_project/services/firebase_service.dart';
 import 'package:skriftes_project/services/models/letter.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
@@ -15,12 +16,14 @@ Future<String> getJson() async {
 /// Displays a list of SampleItems.
 class LetterContainer extends StatefulWidget {
   const LetterContainer({
-    Key? key,
+    super.key,
     required this.controller,
+    required this.received,
     required this.letter,
-  }) : super(key: key);
+  });
 
   final SettingsController controller;
+  final bool received;
   final Letter letter;
 
   static const routeName = '/';
@@ -30,13 +33,23 @@ class LetterContainer extends StatefulWidget {
 }
 
 class _LetterContainerState extends State<LetterContainer> {
-  final Future<String> _calculation = getJson();
-  void onPressed() {
-    FirebaseService().sendLetter("qLh7ol1UjMgiAaCs0q52auxDO672", [
+  void onPressed(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReadLettersView(received: widget.received, controller: widget.controller, letter: widget.letter)));
+  
+    /* FirebaseService().sendLetter("4JH4QnicznNPGQNvaPK4WxY1iLB2", [
       LetterContent(
-          text: "Primer texto",
-          styles: textStyleToMap(const TextStyle(fontSize: 14.0)))
-    ]);
+          text: "Estimado Joseeeeee",
+          styles: textStyleToMap(const TextStyle(fontSize: 18.0))),
+      LetterContent(
+          text: "Soy Ruben, es un placer escribirte.",
+          styles: textStyleToMap(const TextStyle(fontSize: 14.0))),
+      LetterContent(
+          text: "Estoy probando a escribir una carta.",
+          styles: textStyleToMap(const TextStyle(fontSize: 14.0))),
+      LetterContent(
+          text: "Un saludo, Ruben.",
+          styles: textStyleToMap(const TextStyle(fontSize: 14.0))),
+    ]); */
   }
 
   @override
@@ -45,77 +58,28 @@ class _LetterContainerState extends State<LetterContainer> {
     return ListenableBuilder(
       listenable: widget.controller,
       builder: (BuildContext context, Widget? child) {
-        return FutureBuilder<String>(
-          future: _calculation,
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.hasData) {
-              String textData = snapshot.data!;
-              List<Map<String, dynamic>> parsedJson = jsonDecode(textData)
-                  .map((jsonString) =>
-                      jsonDecode(jsonString) as Map<String, dynamic>)
-                  .cast<Map<String, dynamic>>()
-                  .toList();
-
-              List<LetterContent> fragmentList =
-                  parsedJson.map((json) => LetterContent.fromJson(json)).toList();
-
-              List<Widget> textWidgets = fragmentList.map((item) {
-                TextStyle textStyle = TextStyle(
-                  fontSize: item.styles != null
-                      ? item.styles!['fontSize'] ?? 14.0
-                      : 14.0,
-                  fontFamily: 'Arial',
-                  color: ColorRepository.getColor(
-                      ColorName.textColor, widget.controller.themeMode),
-                  letterSpacing: 1.0,
-                );
-
-                return Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      item.text,
-                      style: textStyle,
-                    ),
-                  ],
-                );
-              }).toList();
-
-              return Stack(children: [
-                SingleChildScrollView(
-                  child: Container(
-                    margin: const EdgeInsets.all(18),
-                    child: LetterWidget(
-                      textWidgets: textWidgets,
-                      fragmentList: fragmentList,
-                      controller: widget.controller,
-                      onPressed: onPressed,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 24,
-                  right: 22,
-                  child: IgnorePointer(
-                    ignoring: true,
-                    child: Icon(
-                      Icons.open_in_full,
-                      color: ColorRepository.getColor(
-                          ColorName.specialColor, widget.controller.themeMode),
-                    ),
-                  ),
-                ),
-              ]);
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: ColorRepository.getColor(
-                      ColorName.specialColor, widget.controller.themeMode),
-                ),
-              );
-            }
-          },
-        );
+        return Stack(children: [
+          Container(
+            margin: const EdgeInsets.all(18),
+            child: LetterWidget(
+              controller: widget.controller,
+              onPressed: onPressed,
+              letter: widget.letter,
+            ),
+          ),
+          Positioned(
+            top: 24,
+            right: 22,
+            child: IgnorePointer(
+              ignoring: true,
+              child: Icon(
+                Icons.open_in_full,
+                color: ColorRepository.getColor(
+                    ColorName.specialColor, widget.controller.themeMode),
+              ),
+            ),
+          ),
+        ]);
       },
     );
   }
@@ -124,16 +88,14 @@ class _LetterContainerState extends State<LetterContainer> {
 class LetterWidget extends StatefulWidget {
   const LetterWidget({
     Key? key,
-    required this.textWidgets,
     required this.controller,
-    required this.fragmentList,
     required this.onPressed,
+    required this.letter,
   }) : super(key: key);
 
   final SettingsController controller;
-  final List<Widget> textWidgets;
-  final List<LetterContent> fragmentList;
-  final void Function() onPressed;
+  final void Function(BuildContext) onPressed;
+  final Letter letter;
 
   @override
   State<LetterWidget> createState() => _LetterState();
@@ -146,7 +108,7 @@ class _LetterState extends State<LetterWidget> {
       listenable: widget.controller,
       builder: (BuildContext context, Widget? child) {
         return GestureDetector(
-          onTap: widget.onPressed,
+          onTap: () => widget.onPressed(context),
           child: Container(
             height: 80,
             width: 160,
@@ -162,7 +124,10 @@ class _LetterState extends State<LetterWidget> {
               ],
             ),
             padding: const EdgeInsets.all(24.0),
-            child: const Text("De Jose"),
+            child: Text(
+              "Para " + widget.letter.recipientName,
+              style: const TextStyle(overflow: TextOverflow.ellipsis),
+            ),
           ),
         );
       },

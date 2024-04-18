@@ -4,11 +4,6 @@ import 'package:skriftes_project/screens/letter/sent_letters.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
 
-Future<String> getFalseFutureString() async {
-  await Future.delayed(Duration.zero);
-  return "value";
-}
-
 /// Displays a list of SampleItems.
 class MyLettersView extends StatefulWidget {
   const MyLettersView({
@@ -17,10 +12,6 @@ class MyLettersView extends StatefulWidget {
   });
 
   final SettingsController controller;
-  Future<String> getFalseFutureString() async {
-    await Future.delayed(Duration.zero);
-    return "value";
-  }
 
   static const routeName = '/';
 

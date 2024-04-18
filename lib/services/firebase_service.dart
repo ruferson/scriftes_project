@@ -16,19 +16,18 @@ class FirebaseService {
     throw Exception('User not logged in');
   }
 
-  // Método para obtener el ID del remitente de la carta
-  Future<String> getSenderId() async {
+  // Método para obtener el username del remitente de la carta
+  Future<String> getUsername(String userId) async {
     try {
-      final userId = await getCurrentUserId();
       final userSnapshot =
           await _firestore.collection('users').doc(userId).get();
       final userData = userSnapshot.data();
-      if (userData != null) {
-        return userId;
+      if (userData != null && userData['username'] != null) {
+        return userData['username'];
       }
-      throw Exception('User data not found');
+      throw Exception('User not found');
     } catch (e) {
-      print('Error getting senderId: $e');
+      print('Error getting user location: $e');
       throw e;
     }
   }
@@ -53,7 +52,7 @@ class FirebaseService {
   Future<void> sendLetter(
       String recipientId, List<LetterContent> message) async {
     try {
-      final senderId = await getSenderId();
+      final senderId = await getCurrentUserId();
       final senderLocation = await getUserLocation(senderId);
       final recipientLocation = await getUserLocation(recipientId);
 
@@ -81,27 +80,39 @@ class FirebaseService {
         .where('_deliveredAt', isLessThan: Timestamp.fromDate(DateTime.now()))
         .orderBy('_createdAt', descending: true)
         .get()
-        .then((querySnapshot) => _convertSnapshotToLetters(querySnapshot));
+        .then((querySnapshot) async {
+      List<Future<Letter>> letters = _convertSnapshotToLetters(querySnapshot);
+      // Espera a que todas las cartas se resuelvan y devuelve la lista de cartas resueltas
+      return Future.wait(letters);
+    });
   }
 
   // Método para obtener las cartas enviadas por el usuario
-  Future<List<Letter>> getSentLetters(String userId) {
+  Future<List<Letter>> getSentLetters(String userId) async {
     return _firestore
         .collection('letters')
         .where('senderId', isEqualTo: userId)
         .orderBy('_createdAt', descending: true)
         .get()
-        .then((querySnapshot) => _convertSnapshotToLetters(querySnapshot));
+        .then((querySnapshot) async {
+      List<Future<Letter>> letters = _convertSnapshotToLetters(querySnapshot);
+      // Espera a que todas las cartas se resuelvan y devuelve la lista de cartas resueltas
+      return Future.wait(letters);
+    });
   }
 
   // Método para convertir el snapshot de cartas en una lista de objetos Letter
-  List<Letter> _convertSnapshotToLetters(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
+  List<Future<Letter>> _convertSnapshotToLetters(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) async {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      String senderName = await getUsername(data['senderId']);
+      String recipientName = await getUsername(data['recipientId']);
       // Parsea los datos del documento a un objeto Letter
       return Letter(
         senderId: data['senderId'],
         recipientId: data['recipientId'],
+        senderName: senderName,
+        recipientName: recipientName,
         message: _convertMessage(data['message']),
         createdAt: (data['_createdAt'] as Timestamp).toDate(),
         deliveredAt: (data['_deliveredAt'] as Timestamp).toDate(),

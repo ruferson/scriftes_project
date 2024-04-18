@@ -55,6 +55,66 @@ class _SentLettersViewState extends State<SentLettersView> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+        body: ListenableBuilder(
+            listenable: widget.controller,
+            builder: (BuildContext context, Widget? child) {
+              return FutureBuilder<List<Letter>>(
+                  future: _firebaseService.getSentLetters(_userId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return MyLettersLoading(widget: widget);
+                    } else if (snapshot.hasError) {
+                      print('Error: ${snapshot.error}');
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else {
+                      final letters = snapshot.data;
+                      if (letters != null && letters.isNotEmpty) {
+                        return MyLettersList(widget: widget, letters: letters);
+                      } else {
+                        return MyLettersEmpty(widget: widget);
+                      }
+                    }
+                  });
+            }));
+  }
+}
+
+class MyLettersLoading extends StatelessWidget {
+  const MyLettersLoading({
+    super.key,
+    required this.widget,
+  });
+
+  final SentLettersView widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      color: ColorRepository.getColor(
+          ColorName.primaryColor, widget.controller.themeMode),
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: ColorRepository.getColor(
+              ColorName.specialColor, widget.controller.themeMode),
+        ),
+      ),
+    );
+  }
+}
+
+class MyLettersEmpty extends StatelessWidget {
+  const MyLettersEmpty({
+    super.key,
+    required this.widget,
+  });
+
+  final SentLettersView widget;
+
+  @override
+  Widget build(BuildContext context) {
     List<String> images = [
       "assets/images/detailed_house.png",
       "assets/images/undraw_friendship_mni7.png",
@@ -64,113 +124,87 @@ class _SentLettersViewState extends State<SentLettersView> {
 
     String selectRandomImage() {
       Random random = Random();
-      int randomNumber = random.nextInt(100);
+      double randomNumber = random.nextDouble() * 100;
 
-      if (randomNumber < 60) {
+      if (randomNumber < 90) {
         return images[0];
-      } else if (randomNumber < 74) {
+      } else if (randomNumber < 95) {
         return images[1];
-      } else if (randomNumber < 88) {
+      } else if (randomNumber < 98) {
         return images[2];
       } else {
         return images[3];
       }
     }
 
-    return Scaffold(
+    return Container(
+        alignment: Alignment.center,
+        color: ColorRepository.getColor(
+            ColorName.primaryColor, widget.controller.themeMode),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                selectRandomImage(),
+                width: MediaQuery.of(context).size.width * 0.8,
+                semanticLabel: 'House',
+              ),
+              const SizedBox(height: 36),
+              Text(
+                "Por ahora no has enviado nada...",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: ColorRepository.getColor(ColorName.secondaryTextColor,
+                      widget.controller.themeMode),
+                ),
+              ),
+              const SizedBox(height: 48),
+            ],
+          ),
+        ));
+  }
+}
 
-        // To work with lists that may contain a large number of items, it’s best
-        // to use the ListView.builder constructor.
-        //
-        // In contrast to the default ListView constructor, which requires
-        // building all Widgets up front, the ListView.builder constructor lazily
-        // builds Widgets as they’re scrolled into view.
-        body: ListenableBuilder(
-            listenable: widget.controller,
-            builder: (BuildContext context, Widget? child) {
-              return FutureBuilder<List<Letter>>(
-                  future: _firebaseService.getSentLetters(_userId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height,
-                        color: ColorRepository.getColor(ColorName.primaryColor,
-                            widget.controller.themeMode),
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: ColorRepository.getColor(
-                                ColorName.specialColor,
-                                widget.controller.themeMode),
-                          ),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      print('Error: ${snapshot.error}');
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else {
-                      print(snapshot.data);
-                      final letters = snapshot.data;
-                      if (letters != null && letters.isNotEmpty) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height,
-                          color: ColorRepository.getColor(
-                              ColorName.primaryColor,
-                              widget.controller.themeMode),
-                          width: MediaQuery.of(context).size.width,
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 18.0),
-                              child: Column(
-                                children: [
-                                  Wrap(
-                                      children: letters.map((letter) {
-                                    return LetterContainer(
-                                      controller: widget.controller,
-                                      letter: letter,
-                                      // Puedes pasar otras propiedades de la carta al LetterContainer si es necesario
-                                    );
-                                  }).toList()),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Container(
-                            color: ColorRepository.getColor(
-                                ColorName.primaryColor,
-                                widget.controller.themeMode),
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  selectRandomImage(),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  semanticLabel: 'House',
-                                ),
-                                const SizedBox(height: 36),
-                                Text(
-                                  "Por ahora no has enviado nada...",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorRepository.getColor(
-                                        ColorName.secondaryTextColor,
-                                        widget.controller.themeMode),
-                                  ),
-                                ),
-                                const SizedBox(height: 48),
-                              ],
-                            ));
-                      }
-                    }
-                  });
-            }));
+class MyLettersList extends StatelessWidget {
+  const MyLettersList({
+    super.key,
+    required this.widget,
+    required this.letters,
+  });
+
+  final SentLettersView widget;
+  final List<Letter> letters;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      color: ColorRepository.getColor(
+          ColorName.primaryColor, widget.controller.themeMode),
+      width: MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18.0),
+          child: Column(
+            children: [
+              Wrap(
+                  children: letters.map((letter) {
+                return LetterContainer(
+                  received: false,
+                  controller: widget.controller,
+                  letter: letter,
+                  // Puedes pasar otras propiedades de la carta al LetterContainer si es necesario
+                );
+              }).toList()),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

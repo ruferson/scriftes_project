@@ -28,27 +28,6 @@ Future<String> getFalseFutureString() async {
 }
 
 class _HomeViewState extends State<HomeView> {
-    List<String> images = [
-      "assets/images/detailed_house.png",
-      "assets/images/undraw_friendship_mni7.png",
-      "assets/images/undraw_friends_r511_1.png",
-      "assets/images/undraw_taken_re_yn20_1.png",
-    ];
-
-    String selectRandomImage() {
-      Random random = Random();
-      int randomNumber = random.nextInt(100);
-
-      if (randomNumber < 60) {
-        return images[0];
-      } else if (randomNumber < 74) {
-        return images[1];
-      } else if (randomNumber < 88) {
-        return images[2];
-      } else {
-        return images[3];
-      }
-    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,42 +46,46 @@ class _HomeViewState extends State<HomeView> {
                   builder:
                       (BuildContext context, AsyncSnapshot<String> snapshot) {
                     return Container(
+                        alignment: Alignment.center,
                         color: ColorRepository.getColor(ColorName.primaryColor,
                             widget.controller.themeMode),
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              selectRandomImage(),
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              semanticLabel: 'House',
-                            ),
-                            const SizedBox(height: 48),
-                            Text(
-                              "¡Hace un día estupendo!",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: ColorRepository.getColor(
-                                    ColorName.textColor,
-                                    widget.controller.themeMode),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 48),
+                              Image.asset(
+                                "assets/images/undraw_friendship_mni7.png",
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                semanticLabel: 'House',
                               ),
-                            ),
-                            Text(
-                              "¿Llegará alguna carta hoy...?",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: ColorRepository.getColor(
-                                    ColorName.secondaryTextColor,
-                                    widget.controller.themeMode),
+                              const SizedBox(height: 48),
+                              Text(
+                                "¡Hace un día estupendo!",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorRepository.getColor(
+                                      ColorName.textColor,
+                                      widget.controller.themeMode),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 48),
-                          ],
+                              Text(
+                                "¿Llegará alguna carta hoy...?",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorRepository.getColor(
+                                      ColorName.secondaryTextColor,
+                                      widget.controller.themeMode),
+                                ),
+                              ),
+                              const SizedBox(height: 48),
+                            ],
+                          ),
                         ));
                   });
             }));
