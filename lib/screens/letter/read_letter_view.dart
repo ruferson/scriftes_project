@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
 import 'package:skriftes_project/services/models/letter.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
@@ -55,10 +53,12 @@ class _ReadLetterViewState extends State<ReadLettersView> {
 
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(toolbarHeight),
+          preferredSize: const Size.fromHeight(toolbarHeight),
           child: ScriftesScreenBar(
               toolbarHeight: toolbarHeight, controller: widget.controller),
         ),
+        backgroundColor: ColorRepository.getColor(
+                ColorName.primaryColor, widget.controller.themeMode),
         body: ReadLetterContent(widget: widget, textWidgets: textWidgets));
   }
 }
@@ -80,7 +80,8 @@ class ReadLetterContent extends StatelessWidget {
       builder: (BuildContext context, Widget? child) {
         return Container(
           width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.all(18),
+          height: MediaQuery.of(context).size.height,
+          margin: const EdgeInsets.all(18),
           decoration: BoxDecoration(
             color: ColorRepository.getColor(
                 ColorName.white, widget.controller.themeMode),
