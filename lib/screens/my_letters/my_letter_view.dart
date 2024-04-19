@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skriftes_project/screens/letter/received_letters.dart';
-import 'package:skriftes_project/screens/letter/sent_letters.dart';
+import 'package:skriftes_project/screens/my_letters/received_letters.dart';
+import 'package:skriftes_project/screens/my_letters/sent_letters.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
 

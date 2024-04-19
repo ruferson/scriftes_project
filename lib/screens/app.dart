@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:skriftes_project/screens/home/home_view.dart';
-import 'package:skriftes_project/screens/letter/my_letter_view.dart';
-import 'package:skriftes_project/screens/letter/received_letters.dart';
+import 'package:skriftes_project/screens/my_letters/my_letter_view.dart';
+import 'package:skriftes_project/screens/my_letters/received_letters.dart';
 import 'package:skriftes_project/screens/login/login_view.dart';
+import 'package:skriftes_project/screens/writing/writing_view.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 
-import 'letter/letter_container.dart';
+import 'my_letters/mini_letter.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       case 1:
         return MyLettersView(controller: settingsController);
       case 2:
-        return SizedBox();
+        return WritingView(controller: settingsController);
       case 3:
         return SettingsView(controller: settingsController);
       default:

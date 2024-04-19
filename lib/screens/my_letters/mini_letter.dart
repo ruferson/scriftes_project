@@ -1,21 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:skriftes_project/screens/letter/read_letter_view.dart';
-import 'package:skriftes_project/services/firebase_service.dart';
+import 'package:skriftes_project/screens/my_letters/read_letter_view.dart';
 import 'package:skriftes_project/services/models/letter.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
-import 'package:skriftes_project/utils/helpers.dart';
 
 Future<String> getJson() async {
   return rootBundle.loadString('assets/json/carta.json');
 }
 
 /// Displays a list of SampleItems.
-class LetterContainer extends StatefulWidget {
-  const LetterContainer({
+class MiniLetterContainer extends StatefulWidget {
+  const MiniLetterContainer({
     super.key,
     required this.controller,
     required this.received,
@@ -29,10 +25,10 @@ class LetterContainer extends StatefulWidget {
   static const routeName = '/';
 
   @override
-  State<LetterContainer> createState() => _LetterContainerState();
+  State<MiniLetterContainer> createState() => _MiniLetterContainerState();
 }
 
-class _LetterContainerState extends State<LetterContainer> {
+class _MiniLetterContainerState extends State<MiniLetterContainer> {
   void onPressed(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReadLettersView(received: widget.received, controller: widget.controller, letter: widget.letter)));
   
@@ -61,7 +57,7 @@ class _LetterContainerState extends State<LetterContainer> {
         return Stack(children: [
           Container(
             margin: const EdgeInsets.all(18),
-            child: LetterWidget(
+            child: MiniLetterWidget(
               controller: widget.controller,
               onPressed: onPressed,
               letter: widget.letter,
@@ -85,8 +81,8 @@ class _LetterContainerState extends State<LetterContainer> {
   }
 }
 
-class LetterWidget extends StatefulWidget {
-  const LetterWidget({
+class MiniLetterWidget extends StatefulWidget {
+  const MiniLetterWidget({
     Key? key,
     required this.controller,
     required this.onPressed,
@@ -98,10 +94,10 @@ class LetterWidget extends StatefulWidget {
   final Letter letter;
 
   @override
-  State<LetterWidget> createState() => _LetterState();
+  State<MiniLetterWidget> createState() => _MiniLetterState();
 }
 
-class _LetterState extends State<LetterWidget> {
+class _MiniLetterState extends State<MiniLetterWidget> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(

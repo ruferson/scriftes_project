@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skriftes_project/services/models/letter.dart';
+import 'package:skriftes_project/services/models/user.dart';
 import 'package:skriftes_project/utils/helpers.dart';
 
 class FirebaseService {
@@ -16,30 +17,19 @@ class FirebaseService {
     throw Exception('User not logged in');
   }
 
-  // Método para obtener el username del remitente de la carta
-  Future<String> getUsername(String userId) async {
+  Future<UserData> getUserData(String userId) async {
     try {
       final userSnapshot =
           await _firestore.collection('users').doc(userId).get();
       final userData = userSnapshot.data();
-      if (userData != null && userData['username'] != null) {
-        return userData['username'];
-      }
-      throw Exception('User not found');
-    } catch (e) {
-      print('Error getting user location: $e');
-      throw e;
-    }
-  }
-
-  // Método para obtener la ubicación del usuario
-  Future<GeoPoint> getUserLocation(String userId) async {
-    try {
-      final userSnapshot =
-          await _firestore.collection('users').doc(userId).get();
-      final userData = userSnapshot.data();
-      if (userData != null && userData['location'] != null) {
-        return userData['location'];
+      if (userData != null) {
+        return UserData(
+          createdAt: (userData['_createdAt'] as Timestamp).toDate(),
+          friendCode: userData['friend_code'],
+          friends: (userData['friends'] as List<dynamic>).map((e) => e.toString()).toList(),
+          location: userData['location'],
+          username: userData['username']
+        );
       }
       throw Exception('User location not found');
     } catch (e) {
@@ -53,8 +43,8 @@ class FirebaseService {
       String recipientId, List<LetterContent> message) async {
     try {
       final senderId = await getCurrentUserId();
-      final senderLocation = await getUserLocation(senderId);
-      final recipientLocation = await getUserLocation(recipientId);
+      final sender = await getUserData(senderId);
+      final recipient = await getUserData(recipientId);
 
       await _firestore.collection('letters').add({
         'senderId': senderId,
@@ -63,8 +53,8 @@ class FirebaseService {
         '_createdAt': DateTime.now(),
         '_deliveredAt': calculateArrivalDate(SendingLetter(
             DateTime.now(),
-            Location(senderLocation.latitude, senderLocation.longitude),
-            Location(recipientLocation.latitude, recipientLocation.longitude))),
+            Location(sender.location.latitude, sender.location.longitude),
+            Location(recipient.location.latitude, recipient.location.longitude))),
       });
     } catch (e) {
       print('Error sending letter: $e');
@@ -105,14 +95,14 @@ class FirebaseService {
   List<Future<Letter>> _convertSnapshotToLetters(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) async {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      String senderName = await getUsername(data['senderId']);
-      String recipientName = await getUsername(data['recipientId']);
+      UserData sender = await getUserData(data['senderId']);
+      UserData recipient = await getUserData(data['recipientId']);
       // Parsea los datos del documento a un objeto Letter
       return Letter(
         senderId: data['senderId'],
         recipientId: data['recipientId'],
-        senderName: senderName,
-        recipientName: recipientName,
+        senderName: sender.username,
+        recipientName: recipient.username,
         message: _convertMessage(data['message']),
         createdAt: (data['_createdAt'] as Timestamp).toDate(),
         deliveredAt: (data['_deliveredAt'] as Timestamp).toDate(),
