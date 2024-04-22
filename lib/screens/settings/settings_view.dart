@@ -21,7 +21,7 @@ class SettingsView extends StatelessWidget {
         actions: [
           // Añade un icono de cerrar sesión en el AppBar
           IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () async {
               // Cierra la sesión actual cuando se presiona el botón
               await FirebaseAuth.instance.signOut();

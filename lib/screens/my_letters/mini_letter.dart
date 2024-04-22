@@ -83,11 +83,11 @@ class _MiniLetterContainerState extends State<MiniLetterContainer> {
 
 class MiniLetterWidget extends StatefulWidget {
   const MiniLetterWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onPressed,
     required this.letter,
-  }) : super(key: key);
+  });
 
   final SettingsController controller;
   final void Function(BuildContext) onPressed;
@@ -121,7 +121,7 @@ class _MiniLetterState extends State<MiniLetterWidget> {
             ),
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              "Para " + widget.letter.recipientName,
+              "Para ${widget.letter.recipientName}",
               style: const TextStyle(overflow: TextOverflow.ellipsis),
             ),
           ),

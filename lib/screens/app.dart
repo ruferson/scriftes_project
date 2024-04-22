@@ -4,21 +4,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:skriftes_project/screens/home/home_view.dart';
 import 'package:skriftes_project/screens/my_letters/my_letter_view.dart';
-import 'package:skriftes_project/screens/my_letters/received_letters.dart';
 import 'package:skriftes_project/screens/login/login_view.dart';
 import 'package:skriftes_project/screens/writing/writing_view.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 
-import 'my_letters/mini_letter.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatefulWidget {
   const MyApp({
-    Key? key, // Added a key parameter
+    super.key, // Added a key parameter
     required this.settingsController,
-  }) : super(key: key); // Added super constructor
+  }); // Added super constructor
 
   final SettingsController settingsController;
 

@@ -1,9 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:skriftes_project/screens/my_letters/mini_letter.dart';
 import 'package:skriftes_project/services/firebase_service.dart';
 import 'package:skriftes_project/services/models/letter.dart';

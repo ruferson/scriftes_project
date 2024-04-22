@@ -31,10 +31,20 @@ class FirebaseService {
           username: userData['username']
         );
       }
-      throw Exception('User location not found');
+      throw Exception('User data not found');
     } catch (e) {
-      print('Error getting user location: $e');
-      throw e;
+      print('Error getting user data: $e');
+      rethrow;
+    }
+  }
+
+  Future<UserData> getMyUserData() async {
+    try {
+      final myId = await getCurrentUserId();
+      return getUserData(myId);
+    } catch (e) {
+      print('Error getting user data: $e');
+      rethrow;
     }
   }
 

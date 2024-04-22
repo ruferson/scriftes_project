@@ -1,15 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({
-    Key? key, // Añadido el parámetro de la clave
+    super.key, // Añadido el parámetro de la clave
     required this.controller,
-  }) : super(key: key); // Utilizando la clave en el constructor
+  }); // Utilizando la clave en el constructor
 
   final SettingsController controller;
 
@@ -168,7 +166,7 @@ class _LoginViewState extends State<LoginView> {
               const SizedBox(height: 14),
               Text(
                 loginMsg,
-                style: TextStyle(color: const Color.fromARGB(255, 143, 26, 26)),
+                style: const TextStyle(color: Color.fromARGB(255, 143, 26, 26)),
               ),
               const SizedBox(height: 14),
               Row(

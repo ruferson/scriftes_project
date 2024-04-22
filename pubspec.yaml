@@ -22,7 +22,6 @@ dependencies:
   get: ^4.6.6
   shared_preferences: ^2.2.2
   vector_graphics: ^1.1.11+1
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

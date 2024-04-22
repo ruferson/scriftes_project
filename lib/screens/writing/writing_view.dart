@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
-import 'package:skriftes_project/services/models/letter.dart';
+import 'package:skriftes_project/services/firebase_service.dart';
+import 'package:skriftes_project/services/models/user.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 
-Future<String> getFalseFutureString() async {
-  await Future.delayed(Duration.zero);
-  return "value";
-}
-
-/// Displays a list of SampleItems.
 class WritingView extends StatefulWidget {
   const WritingView({
-    super.key,
+    Key? key,
     required this.controller,
-  });
+  }) : super(key: key);
 
   final SettingsController controller;
 
@@ -25,72 +20,134 @@ class WritingView extends StatefulWidget {
 
 class _WritingViewState extends State<WritingView> {
   int step = 0;
+  late Future<UserData> _userDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userDataFuture = FirebaseService().getMyUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
-    Widget stepWidget = ReadLetterContent(widget: widget);
-    String dropdownValue = list.first;
+    return Scaffold(
+      backgroundColor: ColorRepository.getColor(
+          ColorName.primaryColor, widget.controller.themeMode),
+      body: step == 0 ? _buildBody() : ReadLetterContent(widget: widget),
+    );
+  }
 
-    switch (step) {
-      case 0:
-        stepWidget = Container(
+  Widget _buildBody() {
+    return FutureBuilder<UserData>(
+      future: _userDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          final userData = snapshot.data!;
+          return Container(
+            margin: const EdgeInsets.all(16),
             alignment: Alignment.center,
-            color: ColorRepository.getColor(
-                ColorName.primaryColor, widget.controller.themeMode),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 8),
                 Text(
-                  "Elige un amigo:",
+                  "¿A quién quieres enviar tu carta?",
                   style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
                     color: ColorRepository.getColor(
                         ColorName.textColor, widget.controller.themeMode),
                   ),
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
-                DropdownMenu<String>(
-                  initialSelection: list.first,
-                  onSelected: (String? value) {
-                    // This is called when the user selects an item.
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  menuStyle: MenuStyle(
-                    backgroundColor: MaterialStatePropertyAll(
-                        ColorRepository.getColor(ColorName.primaryColor,
-                            widget.controller.themeMode)),
+                const SizedBox(height: 18),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: userData.friends.length,
+                    itemBuilder: (context, index) {
+                      final friendId = userData.friends[index];
+                      return FutureBuilder<UserData>(
+                        future: FirebaseService().getUserData(friendId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            final friendData = snapshot.data!;
+                            return FriendTile(
+                              friend: Friend(
+                                name: friendData.username,
+                                imageUrl: 'assets/${friendData.username}.jpg',
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  step = 1; // Cambiar al siguiente paso
+                                });
+                              },
+                            );
+                          }
+                        },
+                      );
+                    },
                   ),
-                  dropdownMenuEntries:
-                      list.map<DropdownMenuEntry<String>>((String value) {
-                    return DropdownMenuEntry<String>(
-                        value: value, label: value);
-                  }).toList(),
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
+                const SizedBox(height: 18),
               ],
-            ));
-        break;
-      case 1:
-        stepWidget = ReadLetterContent(widget: widget);
-        break;
-      default:
-        stepWidget = ReadLetterContent(widget: widget);
-        break;
-    }
+            ),
+          );
+        }
+      },
+    );
+  }
+}
 
-    return Container(
-      color: ColorRepository.getColor(
-          ColorName.primaryColor, widget.controller.themeMode),
-      child: stepWidget,
+class Friend {
+  final String name;
+  final String imageUrl;
+
+  Friend({required this.name, required this.imageUrl});
+}
+
+class FriendTile extends StatelessWidget {
+  final Friend friend;
+  final VoidCallback onTap;
+
+  const FriendTile({
+    Key? key,
+    required this.friend,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage(friend.imageUrl),
+              radius: 30,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              friend.name,
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

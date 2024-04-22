@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter/widgets.dart';
 import 'package:skriftes_project/themes/color_repository.dart';
 import 'package:skriftes_project/screens/settings/settings_controller.dart';
 
