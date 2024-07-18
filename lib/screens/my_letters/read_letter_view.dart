@@ -55,10 +55,13 @@ class _ReadLetterViewState extends State<ReadLettersView> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(toolbarHeight),
           child: ScriftesScreenBar(
-              toolbarHeight: toolbarHeight, controller: widget.controller),
+            toolbarHeight: toolbarHeight,
+            controller: widget.controller,
+            letter: widget.letter,
+          ),
         ),
         backgroundColor: ColorRepository.getColor(
-                ColorName.primaryColor, widget.controller.themeMode),
+            ColorName.primaryColor, widget.controller.themeMode),
         body: ReadLetterContent(widget: widget, textWidgets: textWidgets));
   }
 }
@@ -112,10 +115,12 @@ class ScriftesScreenBar extends StatelessWidget {
     super.key,
     required this.toolbarHeight,
     required this.controller,
+    required this.letter,
   });
 
   final double toolbarHeight;
   final SettingsController controller;
+  final Letter letter;
 
   @override
   Widget build(BuildContext context) {
@@ -128,19 +133,30 @@ class ScriftesScreenBar extends StatelessWidget {
         )
       ]),
       child: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         toolbarHeight: toolbarHeight,
         backgroundColor: ColorRepository.getColor(
             ColorName.primaryColor, controller.themeMode),
-        title: Image.asset(
-          controller.themeMode == ThemeMode.light
-              ? 'assets/images/logo.png'
-              : controller.themeMode == ThemeMode.dark
-                  ? 'assets/images/dark_logo.png'
-                  : 'assets/images/logo.png',
-          width: 180,
-          semanticLabel: 'Scrifte\'s logo',
+        title: Padding(
+          padding: const EdgeInsets.only(top: 5.0), // Agrega padding arriba
+          child: Text("Carta de ${letter.senderName}"),
         ),
+        automaticallyImplyLeading: false,
+        actions: [
+          SizedBox(
+            width: toolbarHeight,
+            height: toolbarHeight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5.0), // Agrega padding arriba
+              child: IconButton(
+                icon: const Icon(Icons.close, size: 30), // Tamaño del icono
+                onPressed: () {
+                  Navigator.pop(context); // Acción para descartar la vista
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
