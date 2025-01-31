@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
-import 'package:skriftes_project/screens/settings/settings_controller.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({

@@ -1,11 +1,10 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:skriftes_project/screens/my_letters/mini_letter.dart';
-import 'package:skriftes_project/services/firebase_service.dart';
-import 'package:skriftes_project/services/models/letter.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
-import 'package:skriftes_project/screens/settings/settings_controller.dart';
+import 'package:skriftes_project_2/screens/my_letters/mini_letter.dart';
+import 'package:skriftes_project_2/services/firebase_service.dart';
+import 'package:skriftes_project_2/services/models/letter.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 
 Future<String> getFalseFutureString() async {
   await Future.delayed(Duration.zero);
@@ -64,7 +63,8 @@ class _ReceivedLettersViewState extends State<ReceivedLettersView> {
                       return ReveivedLettersLoading(widget: widget);
                     } else if (snapshot.hasError) {
                       print('Error: ${snapshot.error}');
-                      return ReceivedLettersError(widget: widget, snapshot: snapshot);
+                      return ReceivedLettersError(
+                          widget: widget, snapshot: snapshot);
                     } else {
                       final letters = snapshot.data;
                       if (letters != null && letters.isNotEmpty) {
@@ -92,8 +92,7 @@ class ReceivedLettersEmpty extends StatelessWidget {
     return Container(
         alignment: Alignment.center,
         color: ColorRepository.getColor(
-            ColorName.primaryColor,
-            widget.controller.themeMode),
+            ColorName.primaryColor, widget.controller.themeMode),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
@@ -104,8 +103,7 @@ class ReceivedLettersEmpty extends StatelessWidget {
               const SizedBox(height: 48),
               Image.asset(
                 "assets/images/detailed_house.png",
-                width:
-                    MediaQuery.of(context).size.width * 0.8,
+                width: MediaQuery.of(context).size.width * 0.8,
                 semanticLabel: 'House',
               ),
               const SizedBox(height: 48),
@@ -114,8 +112,7 @@ class ReceivedLettersEmpty extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: ColorRepository.getColor(
-                      ColorName.secondaryTextColor,
+                  color: ColorRepository.getColor(ColorName.secondaryTextColor,
                       widget.controller.themeMode),
                 ),
               ),

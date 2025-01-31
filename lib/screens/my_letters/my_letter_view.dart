@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:skriftes_project/screens/my_letters/received_letters.dart';
-import 'package:skriftes_project/screens/my_letters/sent_letters.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
-import 'package:skriftes_project/screens/settings/settings_controller.dart';
+import 'package:skriftes_project_2/screens/my_letters/received_letters.dart';
+import 'package:skriftes_project_2/screens/my_letters/sent_letters.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 
 /// Displays a list of SampleItems.
 class MyLettersView extends StatefulWidget {
@@ -30,7 +30,7 @@ class _MyLettersViewState extends State<MyLettersView> {
         backgroundColor: ColorRepository.getColor(
             ColorName.primaryColor, widget.controller.themeMode),
         appBar: TabBar(
-          overlayColor: MaterialStatePropertyAll(ColorRepository.getColor(
+          overlayColor: WidgetStatePropertyAll(ColorRepository.getColor(
               ColorName.transpSpecialColor, widget.controller.themeMode)),
           labelColor: ColorRepository.getColor(
               ColorName.brownTextColor, widget.controller.themeMode),

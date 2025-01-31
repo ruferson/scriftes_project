@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:skriftes_project/screens/my_letters/mini_letter.dart';
-import 'package:skriftes_project/services/firebase_service.dart';
-import 'package:skriftes_project/services/models/letter.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
-import 'package:skriftes_project/screens/settings/settings_controller.dart';
+import 'package:skriftes_project_2/screens/my_letters/mini_letter.dart';
+import 'package:skriftes_project_2/services/firebase_service.dart';
+import 'package:skriftes_project_2/services/models/letter.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 
 Future<String> getFalseFutureString() async {
   await Future.delayed(Duration.zero);

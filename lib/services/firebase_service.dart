@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:skriftes_project/services/models/letter.dart';
-import 'package:skriftes_project/services/models/user.dart';
-import 'package:skriftes_project/utils/helpers.dart';
+import 'package:skriftes_project_2/services/models/letter.dart';
+import 'package:skriftes_project_2/services/models/user.dart';
+import 'package:skriftes_project_2/utils/helpers.dart';
 
 class FirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

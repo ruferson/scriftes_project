@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:skriftes_project/screens/my_letters/read_letter_view.dart';
-import 'package:skriftes_project/services/models/letter.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
-import 'package:skriftes_project/screens/settings/settings_controller.dart';
+import 'package:skriftes_project_2/screens/my_letters/read_letter_view.dart';
+import 'package:skriftes_project_2/services/models/letter.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 
 Future<String> getJson() async {
   return rootBundle.loadString('assets/json/carta.json');
@@ -30,8 +30,12 @@ class MiniLetterContainer extends StatefulWidget {
 
 class _MiniLetterContainerState extends State<MiniLetterContainer> {
   void onPressed(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReadLettersView(received: widget.received, controller: widget.controller, letter: widget.letter)));
-  
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ReadLettersView(
+            received: widget.received,
+            controller: widget.controller,
+            letter: widget.letter)));
+
     /* FirebaseService().sendLetter("4JH4QnicznNPGQNvaPK4WxY1iLB2", [
       LetterContent(
           text: "Estimado Joseeeeee",
