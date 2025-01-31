@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:skriftes_project/screens/home/home_view.dart';
-import 'package:skriftes_project/screens/my_letters/my_letter_view.dart';
-import 'package:skriftes_project/screens/login/login_view.dart';
-import 'package:skriftes_project/screens/writing/writing_view.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/home/home_view.dart';
+import 'package:skriftes_project_2/screens/my_letters/my_letter_view.dart';
+import 'package:skriftes_project_2/screens/login/login_view.dart';
+import 'package:skriftes_project_2/screens/writing/writing_view.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
 
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
@@ -73,7 +72,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       restorationScopeId: 'app',
       localizationsDelegates: const [
-        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -102,7 +100,6 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           restorationScopeId: 'app',
           localizationsDelegates: const [
-            AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,

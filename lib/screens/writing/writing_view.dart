@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:skriftes_project/screens/settings/settings_controller.dart';
-import 'package:skriftes_project/services/firebase_service.dart';
-import 'package:skriftes_project/services/models/user.dart';
-import 'package:skriftes_project/themes/color_repository.dart';
+import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
+import 'package:skriftes_project_2/services/firebase_service.dart';
+import 'package:skriftes_project_2/services/models/user.dart';
+import 'package:skriftes_project_2/themes/color_repository.dart';
 
 class WritingView extends StatefulWidget {
   const WritingView({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
 
   final SettingsController controller;
 
@@ -42,8 +42,11 @@ class _WritingViewState extends State<WritingView> {
       future: _userDataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Center(
+            child: CircularProgressIndicator(
+              color: ColorRepository.getColor(
+                  ColorName.specialColor, widget.controller.themeMode),
+            ),
           );
         } else if (snapshot.hasError) {
           return Center(
@@ -79,7 +82,11 @@ class _WritingViewState extends State<WritingView> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
+                            return CircularProgressIndicator(
+                              color: ColorRepository.getColor(
+                                  ColorName.specialColor,
+                                  widget.controller.themeMode),
+                            );
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
