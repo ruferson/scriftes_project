@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-            return inApp(toolbarHeight);
+          return inApp(toolbarHeight);
         } else {
           if (snapshot.hasData) {
             return inApp(toolbarHeight);
@@ -119,6 +119,7 @@ class _MyAppState extends State<MyApp> {
             ),
             body: _getBodyWidget(_selectedIndex, widget.settingsController),
             bottomNavigationBar: BottomNavigationBar(
+              elevation: 0,
               type: BottomNavigationBarType.fixed,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
@@ -145,7 +146,7 @@ class _MyAppState extends State<MyApp> {
               currentIndex: _selectedIndex,
               onTap: _onItemTapped,
               backgroundColor: ColorRepository.getColor(
-                  ColorName.primaryColor, widget.settingsController.themeMode),
+                  ColorName.barColor, widget.settingsController.themeMode),
               selectedItemColor: ColorRepository.getColor(
                   ColorName.specialColor, widget.settingsController.themeMode),
               unselectedItemColor: ColorRepository.getColor(
@@ -176,28 +177,19 @@ class ScriftesAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Color.fromARGB(41, 0, 0, 0),
-          offset: Offset(0, 2.0),
-          blurRadius: 4.0,
-        )
-      ]),
-      child: AppBar(
-        centerTitle: true,
-        toolbarHeight: toolbarHeight,
-        backgroundColor: ColorRepository.getColor(
-            ColorName.primaryColor, widget.settingsController.themeMode),
-        title: Image.asset(
-          widget.settingsController.themeMode == ThemeMode.light
-              ? 'assets/images/logo.png'
-              : widget.settingsController.themeMode == ThemeMode.dark
-                  ? 'assets/images/dark_logo.png'
-                  : 'assets/images/logo.png',
-          width: 180,
-          semanticLabel: 'Scrifte\'s logo',
-        ),
+    return AppBar(
+      centerTitle: true,
+      toolbarHeight: toolbarHeight,
+      backgroundColor: ColorRepository.getColor(
+          ColorName.barColor, widget.settingsController.themeMode),
+      title: Image.asset(
+        widget.settingsController.themeMode == ThemeMode.light
+            ? 'assets/images/logo.png'
+            : widget.settingsController.themeMode == ThemeMode.dark
+                ? 'assets/images/dark_logo.png'
+                : 'assets/images/logo.png',
+        width: 180,
+        semanticLabel: 'Scrifte\'s logo',
       ),
     );
   }

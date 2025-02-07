@@ -9,6 +9,7 @@ enum ColorName {
   specialColor,
   transpSpecialColor,
   brownTextColor,
+  barColor,
 }
 
 class ColorRepository {
@@ -20,7 +21,8 @@ class ColorRepository {
     ColorName.secondaryTextColor: const Color(0xFF919190),
     ColorName.specialColor: const Color(0xFFFF8370),
     ColorName.transpSpecialColor: const Color.fromARGB(50, 255, 131, 112),
-    ColorName.brownTextColor: const Color(0xFFA52A2A)
+    ColorName.brownTextColor: const Color(0xFFA52A2A),
+    ColorName.barColor: const Color(0xFFEAE1DB),
   };
 
   static final _darkColors = {
@@ -31,12 +33,19 @@ class ColorRepository {
     ColorName.secondaryTextColor: const Color(0xFFBDBDBD),
     ColorName.specialColor: const Color(0xFFC85329),
     ColorName.transpSpecialColor: const Color.fromARGB(50, 200, 83, 41),
-    ColorName.brownTextColor: const Color(0xFF8B4513)
+    ColorName.brownTextColor: const Color(0xFF8B4513),
+    ColorName.barColor: const Color(0xFFEAE1DB),
   };
 
   static Color getColor(ColorName colorName, ThemeMode themeMode) {
     final selectedTheme =
         themeMode == ThemeMode.light ? _lightColors : _darkColors;
     return selectedTheme[colorName] ?? Colors.transparent;
+  }
+
+  static Color getOppositeColor(ColorName colorName, ThemeMode themeMode) {
+    final oppositeTheme =
+        themeMode == ThemeMode.light ? _darkColors : _lightColors;
+    return oppositeTheme[colorName] ?? Colors.transparent;
   }
 }
