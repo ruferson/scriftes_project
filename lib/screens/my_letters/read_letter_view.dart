@@ -30,19 +30,19 @@ class ReadLettersView extends StatefulWidget {
 class _ReadLetterViewState extends State<ReadLettersView> {
   @override
   Widget build(BuildContext context) {
-    const double toolbarHeight = kToolbarHeight;
+    const double toolbarHeight = kTextTabBarHeight;
     List<Widget> textWidgets = widget.letter.message.map((item) {
       TextStyle textStyle = TextStyle(
-        fontSize: item.styles != null ? item.styles!['fontSize'] ?? 14.0 : 14.0,
+        fontSize: item.styles != null ? item.styles!['fontSize'] ?? 16.0 : 16.0,
         fontFamily: 'Arial',
         color: ColorRepository.getColor(
             ColorName.textColor, widget.controller.themeMode),
-        letterSpacing: 1.0,
+        letterSpacing: 0.8,
       );
 
       return Column(
         children: [
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           Text(
             item.text,
             style: textStyle,
@@ -84,7 +84,8 @@ class ReadLetterContent extends StatelessWidget {
         return Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          margin: const EdgeInsets.all(18),
+          margin: const EdgeInsets.only(
+              top: 20.0, bottom: 40.0, left: 20.0, right: 20.0),
           decoration: BoxDecoration(
             color: ColorRepository.getColor(
                 ColorName.white, widget.controller.themeMode),
@@ -124,40 +125,13 @@ class ScriftesScreenBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Color.fromARGB(41, 0, 0, 0),
-          offset: Offset(0, 2.0),
-          blurRadius: 4.0,
-        )
-      ]),
-      child: AppBar(
-        centerTitle: false,
-        toolbarHeight: toolbarHeight,
-        backgroundColor: ColorRepository.getColor(
-            ColorName.primaryColor, controller.themeMode),
-        title: Padding(
-          padding: const EdgeInsets.only(top: 5.0), // Agrega padding arriba
-          child: Text("Carta de ${letter.senderName}"),
-        ),
-        automaticallyImplyLeading: false,
-        actions: [
-          SizedBox(
-            width: toolbarHeight,
-            height: toolbarHeight,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 5.0), // Agrega padding arriba
-              child: IconButton(
-                icon: const Icon(Icons.close, size: 30), // Tamaño del icono
-                onPressed: () {
-                  Navigator.pop(context); // Acción para descartar la vista
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
+    return AppBar(
+      centerTitle: true,
+      toolbarHeight: toolbarHeight,
+      backgroundColor:
+          ColorRepository.getColor(ColorName.barColor, controller.themeMode),
+      title: Text("Carta de ${letter.senderName}"),
+      automaticallyImplyLeading: true,
     );
   }
 }
