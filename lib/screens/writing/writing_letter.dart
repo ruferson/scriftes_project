@@ -221,8 +221,6 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                           ),
                           TextButton(
                             onPressed: () async {
-                              final String content =
-                                  _controller.document.toPlainText();
                               final List<LetterContent> letterContent =
                                   _convertToLetterContent();
 
