@@ -34,7 +34,7 @@ class ColorRepository {
     ColorName.specialColor: const Color(0xFFC85329),
     ColorName.transpSpecialColor: const Color.fromARGB(50, 200, 83, 41),
     ColorName.brownTextColor: const Color(0xFF8B4513),
-    ColorName.barColor: const Color(0xFFEAE1DB),
+    ColorName.barColor: const Color(0xFF3C3C3C),
   };
 
   static Color getColor(ColorName colorName, ThemeMode themeMode) {

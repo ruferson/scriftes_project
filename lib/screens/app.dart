@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_quill/translations.dart';
 import 'package:skriftes_project_2/screens/home/home_view.dart';
 import 'package:skriftes_project_2/screens/my_letters/my_letter_view.dart';
 import 'package:skriftes_project_2/screens/login/login_view.dart';
@@ -75,6 +76,7 @@ class _MyAppState extends State<MyApp> {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
+        FlutterQuillLocalizations.delegate,
       ],
       supportedLocales: const [
         Locale('en', ''), // English, no country code
@@ -178,6 +180,7 @@ class ScriftesAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      primary: true,
       centerTitle: true,
       toolbarHeight: toolbarHeight,
       backgroundColor: ColorRepository.getColor(
@@ -191,6 +194,21 @@ class ScriftesAppBar extends StatelessWidget {
         width: 180,
         semanticLabel: 'Scrifte\'s logo',
       ),
+      leading: _getLeadingIcon(context),
     );
+  }
+
+  Widget _getLeadingIcon(BuildContext context) {
+    // Verificar si el navegador tiene una pantalla anterior
+    if (Navigator.of(context).canPop()) {
+      return IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pop(); // Regresar a la pantalla anterior
+        },
+      );
+    } else {
+      return SizedBox(); // No mostrar el botón si no hay pantallas anteriores
+    }
   }
 }

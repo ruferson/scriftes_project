@@ -3,6 +3,11 @@ class LetterContent {
   final Map<String, dynamic>? styles;
 
   LetterContent({required this.text, required this.styles});
+
+  @override
+  String toString() {
+    return 'LetterContent(text: $text, styles: $styles)';
+  }
 }
 
 class Letter {

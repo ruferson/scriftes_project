@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserData {
+  final String id;
   final String username;
   final GeoPoint location;
   final String friendCode;
@@ -8,6 +9,7 @@ class UserData {
   final DateTime createdAt;
 
   UserData({
+    required this.id,
     required this.username,
     required this.location,
     required this.friendCode,

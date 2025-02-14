@@ -3,6 +3,7 @@ import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 import 'package:skriftes_project_2/services/firebase_service.dart';
 import 'package:skriftes_project_2/services/models/user.dart';
 import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'writing_letter.dart';
 
 class WritingView extends StatefulWidget {
   const WritingView({
@@ -33,7 +34,7 @@ class _WritingViewState extends State<WritingView> {
     return Scaffold(
       backgroundColor: ColorRepository.getColor(
           ColorName.primaryColor, widget.controller.themeMode),
-      body: step == 0 ? _buildBody() : ReadLetterContent(widget: widget),
+      body: _buildBody(),
     );
   }
 
@@ -97,9 +98,12 @@ class _WritingViewState extends State<WritingView> {
                                 imageUrl: 'assets/${friendData.username}.jpg',
                               ),
                               onTap: () {
-                                setState(() {
-                                  step = 1; // Cambiar al siguiente paso
-                                });
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => WritingLetterView(
+                                          controller: widget.controller,
+                                          title: 'Escribiendo carta',
+                                          recipientData: friendData,
+                                        )));
                               },
                             );
                           }
@@ -130,10 +134,10 @@ class FriendTile extends StatelessWidget {
   final VoidCallback onTap;
 
   const FriendTile({
-    Key? key,
+    super.key,
     required this.friend,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -155,48 +159,6 @@ class FriendTile extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ReadLetterContent extends StatelessWidget {
-  const ReadLetterContent({
-    super.key,
-    required this.widget,
-  });
-
-  final WritingView widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: widget.controller,
-      builder: (BuildContext context, Widget? child) {
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          margin: const EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: ColorRepository.getColor(
-                ColorName.white, widget.controller.themeMode),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromARGB(50, 0, 0, 0),
-                offset: Offset(0, 2),
-                blurRadius: 4,
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(24.0),
-          child: const SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [SizedBox(height: 20)],
-            ),
-          ),
-        );
-      },
     );
   }
 }

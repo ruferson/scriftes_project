@@ -10,7 +10,7 @@ class FirebaseService {
 
   // Método para obtener el ID del usuario actualmente autenticado
   Future<String> getCurrentUserId() async {
-    final user = _auth.currentUser;
+    final User? user = _auth.currentUser;
     if (user != null) {
       return user.uid;
     }
@@ -24,12 +24,14 @@ class FirebaseService {
       final userData = userSnapshot.data();
       if (userData != null) {
         return UserData(
-          createdAt: (userData['_createdAt'] as Timestamp).toDate(),
-          friendCode: userData['friend_code'],
-          friends: (userData['friends'] as List<dynamic>).map((e) => e.toString()).toList(),
-          location: userData['location'],
-          username: userData['username']
-        );
+            id: userId,
+            createdAt: (userData['_createdAt'] as Timestamp).toDate(),
+            friendCode: userData['friend_code'],
+            friends: (userData['friends'] as List<dynamic>)
+                .map((e) => e.toString())
+                .toList(),
+            location: userData['location'],
+            username: userData['username']);
       }
       throw Exception('User data not found');
     } catch (e) {
@@ -64,7 +66,8 @@ class FirebaseService {
         '_deliveredAt': calculateArrivalDate(SendingLetter(
             DateTime.now(),
             Location(sender.location.latitude, sender.location.longitude),
-            Location(recipient.location.latitude, recipient.location.longitude))),
+            Location(
+                recipient.location.latitude, recipient.location.longitude))),
       });
     } catch (e) {
       print('Error sending letter: $e');
