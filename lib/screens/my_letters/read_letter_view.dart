@@ -53,7 +53,6 @@ class _ReadLetterViewState extends State<ReadLettersView> {
   @override
   Widget build(BuildContext context) {
     const double toolbarHeight = kTextTabBarHeight;
-    print(widget.letter.message.toString());
 
     List<Widget> textWidgets = [];
 
