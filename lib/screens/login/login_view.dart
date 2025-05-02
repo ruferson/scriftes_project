@@ -177,7 +177,7 @@ class _LoginViewState extends State<LoginView> {
                       _signInWithEmailAndPassword();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
+                      backgroundColor: WidgetStatePropertyAll(
                         ColorRepository.getColor(
                           ColorName.specialColor,
                           widget.controller.themeMode,

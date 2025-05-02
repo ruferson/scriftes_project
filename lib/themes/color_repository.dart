@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum ColorName {
+  fullBlack,
   white,
   primaryColor,
   secondaryColor,
@@ -14,6 +15,7 @@ enum ColorName {
 
 class ColorRepository {
   static final _lightColors = {
+    ColorName.fullBlack: const Color.fromARGB(255, 0, 0, 0),
     ColorName.white: const Color(0xFFFFFFFF),
     ColorName.primaryColor: const Color(0xFFFEF5EF),
     ColorName.secondaryColor: const Color.fromARGB(255, 255, 248, 229),
@@ -26,6 +28,7 @@ class ColorRepository {
   };
 
   static final _darkColors = {
+    ColorName.fullBlack: const Color.fromARGB(255, 255, 255, 255),
     ColorName.white: const Color(0xFF474747),
     ColorName.primaryColor: const Color(0xFF212121),
     ColorName.secondaryColor: const Color(0xFF303030),

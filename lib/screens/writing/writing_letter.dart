@@ -12,7 +12,7 @@ Future<String> getFalseFutureString() async {
   return "value";
 }
 
-/// The WritingLetterView widget displays a letter writing interface.
+/// Displays the main writing interface for a letter.
 class WritingLetterView extends StatefulWidget {
   const WritingLetterView({
     super.key,
@@ -48,11 +48,14 @@ class _WritingLetterViewState extends State<WritingLetterView> {
       backgroundColor: ColorRepository.getColor(
           ColorName.primaryColor, widget.controller.themeMode),
       body: WritingAreaContent(
-          widget: widget, recipientData: widget.recipientData),
+        widget: widget,
+        recipientData: widget.recipientData,
+      ),
     );
   }
 }
 
+/// Displays the writing area where the user can compose a letter.
 class WritingAreaContent extends StatefulWidget {
   const WritingAreaContent({
     super.key,
@@ -70,35 +73,81 @@ class WritingAreaContent extends StatefulWidget {
 class _WritingAreaContentState extends State<WritingAreaContent> {
   late QuillController _controller;
 
-  /// Converts the Quill document into a list of LetterContent.
-  List<LetterContent> _convertToLetterContent() {
-    final List<LetterContent> letterContentList = [];
-
-    final doc = _controller.document;
-    final delta = doc.toDelta();
-
-    for (var change in delta.toList()) {
-      final String text = change.data as String? ?? ''; // Cast to String
-      final Map<String, dynamic> styles = {};
-
-      if (change.attributes != null) {
-        styles.addAll(change.attributes!); // Add styles to map
-      }
-
-      if (text.isNotEmpty) {
-        letterContentList.add(LetterContent(
-            text: text,
-            styles: styles)); // Add text and styles as LetterContent
-      }
-    }
-
-    return letterContentList;
-  }
-
   @override
   void initState() {
     super.initState();
     _controller = QuillController.basic();
+  }
+
+  /// Converts the Quill editor content into a structured list of LetterContent objects.
+  List<LetterContent> _convertToLetterContent() {
+    final List<LetterContent> letterContentList = [];
+    final deltaList = _controller.document.toDelta().toList();
+    List<Map<String, dynamic>> currentLine = [];
+
+    for (var op in deltaList) {
+      if (op.key == 'insert') {
+        final String? text = op.value;
+        final Map<String, dynamic> styleMap = op.attributes != null
+            ? Map<String, dynamic>.from(op.attributes!)
+            : {};
+
+        // Translate header levels into font size styles
+        if (styleMap.containsKey('header')) {
+          final headerLevel = styleMap['header'];
+          for (var styleChange in currentLine) {
+            styleChange['styles']['bold'] = true;
+            switch (headerLevel) {
+              case 1:
+                styleChange['styles']['fontSize'] = 'huge';
+                break;
+              case 2:
+                styleChange['styles']['fontSize'] = 'x-large';
+                break;
+              case 3:
+                styleChange['styles']['fontSize'] = 'large';
+                break;
+            }
+          }
+        }
+
+        if (text != null) {
+          final parts = text.split('\n');
+          for (int i = 0; i < parts.length; i++) {
+            final part = parts[i];
+            if (part.isNotEmpty) {
+              currentLine.add({
+                'text': part,
+                'styles': styleMap,
+              });
+            }
+
+            // When encountering a newline, close the current line
+            if (i < parts.length - 1) {
+              letterContentList.add(
+                LetterContent(
+                  text: '',
+                  styles: {'line': currentLine},
+                ),
+              );
+              currentLine = [];
+            }
+          }
+        }
+      }
+    }
+
+    // Add remaining content if the document does not end with a newline
+    if (currentLine.isNotEmpty) {
+      letterContentList.add(
+        LetterContent(
+          text: '',
+          styles: {'line': currentLine},
+        ),
+      );
+    }
+
+    return letterContentList;
   }
 
   @override
@@ -109,8 +158,7 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
         return Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          margin: const EdgeInsets.only(
-              top: 20.0, bottom: 40.0, left: 20.0, right: 20.0),
+          margin: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           decoration: BoxDecoration(
             color: ColorRepository.getColor(
                 ColorName.white, widget.widget.controller.themeMode),
@@ -188,15 +236,13 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                       ColorName.textColor, widget.widget.controller.themeMode),
                 ),
                 onPressed: () async {
+                  // Show confirmation dialog before sending letter
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
                         backgroundColor: ColorRepository.getColor(
                             ColorName.white,
-                            widget.widget.controller.themeMode),
-                        shadowColor: ColorRepository.getColor(
-                            ColorName.primaryColor,
                             widget.widget.controller.themeMode),
                         title: const Text("Confirmar envío"),
                         content: Text(
@@ -224,29 +270,29 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                               final List<LetterContent> letterContent =
                                   _convertToLetterContent();
 
-                              String recipientId = widget.recipientData
-                                  .id; // Ensure you obtain this ID
+                              final recipientId = widget.recipientData.id;
 
                               try {
                                 await FirebaseService()
                                     .sendLetter(recipientId, letterContent);
-                                // Success message or redirect user
+
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          "¡Carta enviada correctamente!")),
+                                  const SnackBar(
+                                    content:
+                                        Text("¡Carta enviada correctamente!"),
+                                  ),
                                 );
                               } catch (e) {
-                                // Error handling if something goes wrong
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content:
-                                          Text("Error al enviar la carta: $e")),
+                                    content:
+                                        Text("Error al enviar la carta: $e"),
+                                  ),
                                 );
                               }
 
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(); // Close dialog
+                              Navigator.of(context).pop(); // Go back
                             },
                             child: Text(
                               "Enviar",
