@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:skriftes_project_2/screens/my_letters/read_letter_view.dart';
 import 'package:skriftes_project_2/services/models/letter.dart';
 import 'package:skriftes_project_2/themes/color_repository.dart';
 import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
-
-Future<String> getJson() async {
-  return rootBundle.loadString('assets/json/carta.json');
-}
 
 /// Displays a list of SampleItems.
 class MiniLetterContainer extends StatefulWidget {
@@ -54,7 +49,6 @@ class _MiniLetterContainerState extends State<MiniLetterContainer> {
 
   @override
   Widget build(BuildContext context) {
-    getJson();
     return ListenableBuilder(
       listenable: widget.controller,
       builder: (BuildContext context, Widget? child) {

@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsService {
   /// Loads the User's preferred ThemeMode from local or remote storage.
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  
+
   Future<ThemeMode> themeMode() async {
     final SharedPreferences prefs = await _prefs;
     ThemeMode theme = ThemeMode.light;

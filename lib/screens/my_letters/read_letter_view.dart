@@ -29,41 +29,89 @@ class ReadLettersView extends StatefulWidget {
 }
 
 class _ReadLetterViewState extends State<ReadLettersView> {
+  double _getFontSize(dynamic sizeValue) {
+    if (sizeValue == null) return 16.0;
+
+    if (sizeValue is num) return sizeValue.toDouble();
+
+    if (sizeValue is String) {
+      switch (sizeValue) {
+        case 'large':
+          return 22.0;
+        case 'x-large':
+          return 26.0;
+        case 'huge':
+          return 30.0;
+        default:
+          return 16.0;
+      }
+    }
+
+    return 16.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     const double toolbarHeight = kTextTabBarHeight;
-    List<Widget> textWidgets = widget.letter.message.map((item) {
-      TextStyle textStyle = TextStyle(
-        fontSize: item.styles != null ? item.styles!['fontSize'] ?? 16.0 : 16.0,
-        fontFamily: 'Arial',
-        color: ColorRepository.getColor(
-            ColorName.textColor, widget.controller.themeMode),
-        letterSpacing: 0.8,
-      );
 
-      return Column(
-        children: [
-          const SizedBox(height: 6),
-          Text(
-            item.text,
-            style: textStyle,
+    List<Widget> textWidgets = [];
+
+    for (var line in widget.letter.message) {
+      List<InlineSpan> spans = [];
+
+      final fragments = line.styles?['line'] ?? [];
+
+      for (var frag in fragments) {
+        final String text = frag['text'] ?? '';
+        final Map<String, dynamic> styles =
+            Map<String, dynamic>.from(frag['styles'] ?? {});
+
+        spans.add(TextSpan(
+          text: text,
+          style: TextStyle(
+            fontSize: _getFontSize(styles['fontSize']),
+            fontWeight:
+                styles['bold'] == true ? FontWeight.bold : FontWeight.normal,
+            fontStyle:
+                styles['italic'] == true ? FontStyle.italic : FontStyle.normal,
+            decoration: styles['underline'] == true
+                ? TextDecoration.underline
+                : TextDecoration.none,
+            fontFamily: 'Arial',
+            color: ColorRepository.getColor(
+              ColorName.fullBlack,
+              widget.controller.themeMode,
+            ),
+            letterSpacing: 0.6,
           ),
-        ],
-      );
-    }).toList();
+        ));
+      }
 
-    return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(toolbarHeight),
-          child: ScriftesScreenBar(
-            toolbarHeight: toolbarHeight,
-            controller: widget.controller,
-            title: "Carta de ${widget.letter.senderName}",
+      textWidgets.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: RichText(
+            text: TextSpan(children: spans),
           ),
         ),
-        backgroundColor: ColorRepository.getColor(
-            ColorName.primaryColor, widget.controller.themeMode),
-        body: ReadLetterContent(widget: widget, textWidgets: textWidgets));
+      );
+    }
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(toolbarHeight),
+        child: ScriftesScreenBar(
+          toolbarHeight: toolbarHeight,
+          controller: widget.controller,
+          title: "Carta de ${widget.letter.senderName}",
+        ),
+      ),
+      backgroundColor: ColorRepository.getColor(
+        ColorName.primaryColor,
+        widget.controller.themeMode,
+      ),
+      body: ReadLetterContent(widget: widget, textWidgets: textWidgets),
+    );
   }
 }
 
@@ -101,7 +149,6 @@ class ReadLetterContent extends StatelessWidget {
           padding: const EdgeInsets.all(24.0),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: textWidgets,
             ),
