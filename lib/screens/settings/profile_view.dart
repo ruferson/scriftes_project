@@ -283,7 +283,6 @@ class ProfileView extends StatelessWidget {
 
                 if (newPassword == confirmPassword && newPassword.isNotEmpty) {
                   try {
-                    final userId = await _firebaseService.getCurrentUserId();
                     await _firebaseService.updateUserPassword(
                         oldPassword, newPassword);
                     Navigator.of(context).pop();
