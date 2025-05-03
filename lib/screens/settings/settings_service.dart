@@ -1,51 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skriftes_project_2/services/firebase_service.dart';
 
 class SettingsService {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final FirebaseService _firebaseService = FirebaseService();
 
+  // Obtener el tema actual desde SharedPreferences
   Future<ThemeMode> themeMode() async {
-    final SharedPreferences prefs = await _prefs;
-    String? prefsTheme = prefs.getString('themeMode');
-    if (prefsTheme == "ThemeMode.dark") {
-      return ThemeMode.dark;
-    } else {
-      return ThemeMode.light;
-    }
+    final prefs = await SharedPreferences.getInstance();
+    final prefsTheme = prefs.getString('themeMode');
+    return prefsTheme == 'ThemeMode.dark' ? ThemeMode.dark : ThemeMode.light;
   }
 
+  // Guardar el tema en SharedPreferences
   Future<void> updateThemeMode(ThemeMode theme) async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString('themeMode', theme.toString());
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('themeMode', theme.toString());
   }
 
+  // Obtener el nombre desde FirebaseService
   Future<String> getUserName() async {
-    final SharedPreferences prefs = await _prefs;
-    return prefs.getString('userName') ?? 'Usuario';
+    final userData = await _firebaseService.getMyUserData();
+    return userData.username;
   }
 
-  Future<String> getUserAddress() async {
-    final SharedPreferences prefs = await _prefs;
-    return prefs.getString('userAddress') ?? 'Dirección no disponible';
+  // Obtener la dirección desde FirebaseService
+  Future<Object> getUserLocation() async {
+    final userData = await _firebaseService.getMyUserData();
+    return userData.location;
   }
 
-  Future<String> getUserEmail() async {
-    final SharedPreferences prefs = await _prefs;
-    return prefs.getString('userEmail') ?? 'correo@ejemplo.com';
-  }
-
+  // Actualizar el nombre en FirebaseService
   Future<void> updateUserName(String newName) async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString('userName', newName);
+    final userID = await _firebaseService.getCurrentUserId();
+    await _firebaseService.updateUserName(userID, newName);
   }
 
-  Future<void> updateUserAddress(String newAddress) async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString('userAddress', newAddress);
-  }
-
-  Future<void> updateUserEmail(String newEmail) async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString('userEmail', newEmail);
+  // Actualizar la dirección en FirebaseService
+  Future<void> updateUserLocation(GeoPoint newLocation) async {
+    final userID = await _firebaseService.getCurrentUserId();
+    await _firebaseService.updateUserLocation(userID, newLocation);
   }
 }

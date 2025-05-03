@@ -50,6 +50,47 @@ class FirebaseService {
     }
   }
 
+  // Método para actualizar el nombre de usuario en Firestore
+  Future<void> updateUserName(String userId, String newUserName) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'username': newUserName,
+      });
+    } catch (e) {
+      print('Error updating user name: $e');
+      rethrow;
+    }
+  }
+
+  // Método para actualizar el nombre de usuario en Firestore
+  Future<void> updateUserLocation(String userId, GeoPoint newLocation) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'location': newLocation,
+      });
+    } catch (e) {
+      print('Error updating user location: $e');
+      rethrow;
+    }
+  }
+
+// Método para cambiar la contraseña del usuario en Firebase Auth
+  Future<void> updateUserPassword(
+      String oldPassword, String newPassword) async {
+    try {
+      final user = await _auth.currentUser;
+      final cred = EmailAuthProvider.credential(
+        email: user!.email!,
+        password: oldPassword,
+      );
+      await user.reauthenticateWithCredential(cred);
+      await user.updatePassword(newPassword);
+    } catch (e) {
+      print('Error updating password: $e');
+      rethrow;
+    }
+  }
+
   // Método para enviar una carta
   Future<void> sendLetter(
       String recipientId, List<LetterContent> message) async {

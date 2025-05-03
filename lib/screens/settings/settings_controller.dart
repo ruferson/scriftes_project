@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'settings_service.dart';
 
@@ -5,22 +6,21 @@ class SettingsController with ChangeNotifier {
   SettingsController(this._settingsService);
 
   final SettingsService _settingsService;
-  
+
   late ThemeMode _themeMode;
   late String _userName;
-  late String _userAddress;
+  late Object _userLocation;
   late String _userEmail;
-  
+
   ThemeMode get themeMode => _themeMode;
   String get userName => _userName;
-  String get userAddress => _userAddress;
+  Object get userLocation => _userLocation;
   String get userEmail => _userEmail;
 
   Future<void> loadSettings() async {
     _themeMode = await _settingsService.themeMode();
     _userName = await _settingsService.getUserName();
-    _userAddress = await _settingsService.getUserAddress();
-    _userEmail = await _settingsService.getUserEmail();
+    _userLocation = await _settingsService.getUserLocation();
     notifyListeners();
   }
 
@@ -38,15 +38,9 @@ class SettingsController with ChangeNotifier {
     await _settingsService.updateUserName(newName);
   }
 
-  Future<void> updateUserAddress(String newAddress) async {
-    _userAddress = newAddress;
+  Future<void> updateUserLocation(GeoPoint newLocation) async {
+    _userLocation = newLocation;
     notifyListeners();
-    await _settingsService.updateUserAddress(newAddress);
-  }
-
-  Future<void> updateUserEmail(String newEmail) async {
-    _userEmail = newEmail;
-    notifyListeners();
-    await _settingsService.updateUserEmail(newEmail);
+    await _settingsService.updateUserLocation(newLocation);
   }
 }
