@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Importa el paquete de Firebase Auth
+import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'settings_controller.dart';
+import 'profile_view.dart';
+import 'theme_view.dart';
+import 'legal_view.dart';
 
-/// Displays the various settings that can be customized by the user.
-///
-/// When a user changes a setting, the SettingsController is updated and
-/// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key, required this.controller});
 
@@ -16,42 +16,61 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        actions: [
-          // Añade un icono de cerrar sesión en el AppBar
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () async {
-              // Cierra la sesión actual cuando se presiona el botón
-              await FirebaseAuth.instance.signOut();
-              // Puedes agregar cualquier lógica adicional aquí, como navegar a una nueva pantalla
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        // Glue the SettingsController to the theme selection DropdownButton.
-        //
-        // When a user selects a theme from the dropdown list, the
-        // SettingsController is updated, which rebuilds the MaterialApp.
-        child: DropdownButton<ThemeMode>(
-          // Read the selected themeMode from the controller
-          value: controller.themeMode,
-          // Call the updateThemeMode method any time the user selects a theme.
-          onChanged: controller.updateThemeMode,
-          items: const [
-            DropdownMenuItem(
-              value: ThemeMode.light,
-              child: Text('Light Theme'),
+      backgroundColor: ColorRepository.getColor(ColorName.primaryColor, controller.themeMode),
+      body: ListenableBuilder(
+        listenable: controller,
+        builder: (BuildContext context, Widget? child) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Sección de Configuración
+                  Text(
+                    "Configuración",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: ColorRepository.getColor(ColorName.textColor, controller.themeMode),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ListTile(
+                    title: const Text('Perfil de Usuario'),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ProfileView(controller: controller),
+                      ));
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Tema'),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ThemeView(controller: controller),
+                      ));
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Legal'),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LegalView(),
+                      ));
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Cerrar sesión'),
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                    },
+                  ),
+                ],
+              ),
             ),
-            DropdownMenuItem(
-              value: ThemeMode.dark,
-              child: Text('Dark Theme'),
-            )
-          ],
-        ),
+          );
+        },
       ),
     );
   }
