@@ -1,43 +1,45 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skriftes_project_2/services/firebase_service.dart';
 
-/// A service that stores and retrieves user settings.
-///
-/// By default, this class does not persist user settings. If you'd like to
-/// persist the user settings locally, use the shared_preferences package. If
-/// you'd like to store settings on a web server, use the http package.
 class SettingsService {
-  /// Loads the User's preferred ThemeMode from local or remote storage.
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final FirebaseService _firebaseService = FirebaseService();
 
+  // Obtener el tema actual desde SharedPreferences
   Future<ThemeMode> themeMode() async {
-    final SharedPreferences prefs = await _prefs;
-    ThemeMode theme = ThemeMode.light;
-    String? prefsTheme = prefs.getString('themeMode');
+    final prefs = await SharedPreferences.getInstance();
+    final prefsTheme = prefs.getString('themeMode');
+    return prefsTheme == 'ThemeMode.dark' ? ThemeMode.dark : ThemeMode.light;
+  }
 
-    switch (prefsTheme) {
-      case "ThemeMode.dark":
-        theme = ThemeMode.dark;
-        break;
-      case "ThemeMode.light":
-        theme = ThemeMode.light;
-        break;
-      default:
-        theme = ThemeMode.light;
-        break;
-    }
-
-    return theme;
-  } //=> ThemeMode.system;
-
-  /// Persists the user's preferred ThemeMode to local or remote storage.
+  // Guardar el tema en SharedPreferences
   Future<void> updateThemeMode(ThemeMode theme) async {
-    // Use the shared_preferences package to persist settings locally or the
-    // http package to persist settings over the network.
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString('themeMode', theme.toString());
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('themeMode', theme.toString());
+  }
 
-    String? prefsTheme = prefs.getString('themeMode');
-    print(prefsTheme);
+  // Obtener el nombre desde FirebaseService
+  Future<String> getUserName() async {
+    final userData = await _firebaseService.getMyUserData();
+    return userData.username;
+  }
+
+  // Obtener la dirección desde FirebaseService
+  Future<Object> getUserLocation() async {
+    final userData = await _firebaseService.getMyUserData();
+    return userData.location;
+  }
+
+  // Actualizar el nombre en FirebaseService
+  Future<void> updateUserName(String newName) async {
+    final userID = await _firebaseService.getCurrentUserId();
+    await _firebaseService.updateUserName(userID, newName);
+  }
+
+  // Actualizar la dirección en FirebaseService
+  Future<void> updateUserLocation(GeoPoint newLocation) async {
+    final userID = await _firebaseService.getCurrentUserId();
+    await _firebaseService.updateUserLocation(userID, newLocation);
   }
 }
