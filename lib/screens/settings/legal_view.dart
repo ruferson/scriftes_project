@@ -55,18 +55,8 @@ class LegalView extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: ColorRepository.getColor(
-            ColorName.secondaryColor,
-            controller.themeMode,
-          ),
           title: Text(
             "Términos y Condiciones",
-            style: TextStyle(
-              color: ColorRepository.getColor(
-                ColorName.textColor,
-                controller.themeMode,
-              ),
-            ),
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -116,12 +106,6 @@ El desarrollador se reserva el derecho de suspender o eliminar la cuenta de cual
 
 11. Resolución de disputas
 En caso de disputa, las partes intentarán resolver la controversia de manera amigable mediante mediación. Si no se alcanza un acuerdo, se someterán a los Juzgados y Tribunales del domicilio del usuario.''',
-                  style: TextStyle(
-                    color: ColorRepository.getColor(
-                      ColorName.textColor,
-                      controller.themeMode,
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -153,18 +137,8 @@ En caso de disputa, las partes intentarán resolver la controversia de manera am
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: ColorRepository.getColor(
-            ColorName.secondaryColor,
-            controller.themeMode,
-          ),
           title: Text(
             "Política de Privacidad",
-            style: TextStyle(
-              color: ColorRepository.getColor(
-                ColorName.textColor,
-                controller.themeMode,
-              ),
-            ),
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -222,12 +196,6 @@ En caso de que los datos se transfieran a servidores ubicados fuera de la UE, el
 
 10. Cambios en la política
 Esta política puede actualizarse en cualquier momento. Cualquier cambio será informado oportunamente a través de la App.''',
-                  style: TextStyle(
-                    color: ColorRepository.getColor(
-                      ColorName.textColor,
-                      controller.themeMode,
-                    ),
-                  ),
                 ),
               ],
             ),

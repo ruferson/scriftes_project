@@ -286,7 +286,7 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                               "Enviar",
                               style: TextStyle(
                                 color: ColorRepository.getColor(
-                                    ColorName.brownTextColor,
+                                    ColorName.specialColor,
                                     widget.widget.controller.themeMode),
                               ),
                             ),

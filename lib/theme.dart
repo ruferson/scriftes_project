@@ -91,12 +91,6 @@ class AppTheme {
             );
           }),
           foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return ColorRepository.getColor(
-                ColorName.brownTextColor,
-                mode,
-              );
-            }
             return ColorRepository.getColor(
               ColorName.textColor,
               mode,

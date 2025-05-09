@@ -123,7 +123,7 @@ class ProfileView extends StatelessWidget {
                 'Guardar',
                 style: TextStyle(
                   color: ColorRepository.getColor(
-                    ColorName.brownTextColor,
+                    ColorName.specialColor,
                     controller.themeMode,
                   ),
                 ),
@@ -200,7 +200,7 @@ class ProfileView extends StatelessWidget {
                 'Guardar',
                 style: TextStyle(
                   color: ColorRepository.getColor(
-                    ColorName.brownTextColor,
+                    ColorName.specialColor,
                     controller.themeMode,
                   ),
                 ),
