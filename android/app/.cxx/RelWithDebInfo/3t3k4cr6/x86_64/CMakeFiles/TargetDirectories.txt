@@ -1,0 +1,2 @@
+/Users/rubenfernandezsanchez/Documents/coding/skriftes_project_2/android/app/.cxx/RelWithDebInfo/3t3k4cr6/x86_64/CMakeFiles/edit_cache.dir
+/Users/rubenfernandezsanchez/Documents/coding/skriftes_project_2/android/app/.cxx/RelWithDebInfo/3t3k4cr6/x86_64/CMakeFiles/rebuild_cache.dir

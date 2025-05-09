@@ -241,16 +241,9 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        backgroundColor: ColorRepository.getColor(
-                            ColorName.white,
-                            widget.widget.controller.themeMode),
                         title: const Text("Confirmar envío"),
                         content: Text(
                           "¿Estás seguro de que quieres enviar la carta?",
-                          style: TextStyle(
-                            color: ColorRepository.getColor(ColorName.textColor,
-                                widget.widget.controller.themeMode),
-                          ),
                         ),
                         actions: [
                           TextButton(
@@ -258,11 +251,6 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                                 Navigator.of(context).pop(), // Cancel
                             child: Text(
                               "Cancelar",
-                              style: TextStyle(
-                                color: ColorRepository.getColor(
-                                    ColorName.specialColor,
-                                    widget.widget.controller.themeMode),
-                              ),
                             ),
                           ),
                           TextButton(
@@ -298,7 +286,7 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                               "Enviar",
                               style: TextStyle(
                                 color: ColorRepository.getColor(
-                                    ColorName.specialColor,
+                                    ColorName.brownTextColor,
                                     widget.widget.controller.themeMode),
                               ),
                             ),

@@ -93,56 +93,26 @@ class ProfileView extends StatelessWidget {
   }
 
   void _showEditNameDialog(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    nameController.text = controller.userName;
+    final TextEditingController nameController =
+        TextEditingController(text: controller.userName);
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: ColorRepository.getColor(
-            ColorName.secondaryColor,
-            controller.themeMode,
-          ),
           title: Text(
             'Editar nombre de usuario',
-            style: TextStyle(
-              color: ColorRepository.getColor(
-                ColorName.textColor,
-                controller.themeMode,
-              ),
-            ),
           ),
           content: TextField(
             controller: nameController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Nuevo nombre',
-              hintStyle: TextStyle(
-                color: ColorRepository.getColor(
-                  ColorName.secondaryTextColor,
-                  controller.themeMode,
-                ),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: ColorRepository.getColor(
-                    ColorName.specialColor,
-                    controller.themeMode,
-                  ),
-                ),
-              ),
             ),
           ),
           actions: <Widget>[
             TextButton(
               child: Text(
                 'Cancelar',
-                style: TextStyle(
-                  color: ColorRepository.getColor(
-                    ColorName.secondaryTextColor,
-                    controller.themeMode,
-                  ),
-                ),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -153,7 +123,7 @@ class ProfileView extends StatelessWidget {
                 'Guardar',
                 style: TextStyle(
                   color: ColorRepository.getColor(
-                    ColorName.specialColor,
+                    ColorName.brownTextColor,
                     controller.themeMode,
                   ),
                 ),
@@ -166,39 +136,15 @@ class ProfileView extends StatelessWidget {
                     await _firebaseService.updateUserName(userId, newUserName);
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Nombre actualizado',
-                          style: TextStyle(
-                            color: ColorRepository.getColor(
-                              ColorName.textColor,
-                              controller.themeMode,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: ColorRepository.getColor(
-                          ColorName.secondaryColor,
-                          controller.themeMode,
-                        ),
+                      const SnackBar(
+                        content: Text('Nombre actualizado'),
                       ),
                     );
                     controller.updateUserName(newUserName);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Error al actualizar nombre',
-                          style: TextStyle(
-                            color: ColorRepository.getColor(
-                              ColorName.textColor,
-                              controller.themeMode,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: ColorRepository.getColor(
-                          ColorName.secondaryColor,
-                          controller.themeMode,
-                        ),
+                      const SnackBar(
+                        content: Text('Error al actualizar nombre'),
                       ),
                     );
                   }
@@ -212,27 +158,16 @@ class ProfileView extends StatelessWidget {
   }
 
   void _showChangePasswordDialog(BuildContext context) {
-    final TextEditingController oldPasswordController = TextEditingController();
-    final TextEditingController newPasswordController = TextEditingController();
-    final TextEditingController confirmPasswordController =
-        TextEditingController();
+    final oldPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: ColorRepository.getColor(
-            ColorName.secondaryColor,
-            controller.themeMode,
-          ),
           title: Text(
             'Cambiar contraseña',
-            style: TextStyle(
-              color: ColorRepository.getColor(
-                ColorName.textColor,
-                controller.themeMode,
-              ),
-            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -253,25 +188,19 @@ class ProfileView extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(
-                'Cancelar',
-                style: TextStyle(
-                  color: ColorRepository.getColor(
-                    ColorName.secondaryTextColor,
-                    controller.themeMode,
-                  ),
-                ),
-              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              child: Text(
+                'Cancelar',
+              ),
             ),
             TextButton(
               child: Text(
                 'Guardar',
                 style: TextStyle(
                   color: ColorRepository.getColor(
-                    ColorName.specialColor,
+                    ColorName.brownTextColor,
                     controller.themeMode,
                   ),
                 ),
@@ -287,57 +216,21 @@ class ProfileView extends StatelessWidget {
                         oldPassword, newPassword);
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Contraseña actualizada',
-                          style: TextStyle(
-                            color: ColorRepository.getColor(
-                              ColorName.textColor,
-                              controller.themeMode,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: ColorRepository.getColor(
-                          ColorName.secondaryColor,
-                          controller.themeMode,
-                        ),
+                      const SnackBar(
+                        content: Text('Contraseña actualizada'),
                       ),
                     );
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Error al actualizar contraseña',
-                          style: TextStyle(
-                            color: ColorRepository.getColor(
-                              ColorName.textColor,
-                              controller.themeMode,
-                            ),
-                          ),
-                        ),
-                        backgroundColor: ColorRepository.getColor(
-                          ColorName.secondaryColor,
-                          controller.themeMode,
-                        ),
+                      const SnackBar(
+                        content: Text('Error al actualizar contraseña'),
                       ),
                     );
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Las contraseñas no coinciden',
-                        style: TextStyle(
-                          color: ColorRepository.getColor(
-                            ColorName.textColor,
-                            controller.themeMode,
-                          ),
-                        ),
-                      ),
-                      backgroundColor: ColorRepository.getColor(
-                        ColorName.secondaryColor,
-                        controller.themeMode,
-                      ),
+                    const SnackBar(
+                      content: Text('Las contraseñas no coinciden'),
                     ),
                   );
                 }
@@ -358,20 +251,6 @@ class ProfileView extends StatelessWidget {
       obscureText: true,
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(
-          color: ColorRepository.getColor(
-            ColorName.secondaryTextColor,
-            this.controller.themeMode,
-          ),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(
-            color: ColorRepository.getColor(
-              ColorName.specialColor,
-              this.controller.themeMode,
-            ),
-          ),
-        ),
       ),
     );
   }
