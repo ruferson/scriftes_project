@@ -8,13 +8,20 @@ class FirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Método para obtener el ID del usuario actualmente autenticado
+// Devuelve true si hay un usuario logueado
+  bool isUserLoggedIn() {
+    return _auth.currentUser != null;
+  }
+
+// Método para obtener el ID del usuario actualmente autenticado
   Future<String> getCurrentUserId() async {
     final User? user = _auth.currentUser;
     if (user != null) {
       return user.uid;
+    } else {
+      print('[FirebaseService] No user is logged in.');
+      throw Exception('User not logged in');
     }
-    throw Exception('User not logged in');
   }
 
   Future<UserData> getUserData(String userId) async {

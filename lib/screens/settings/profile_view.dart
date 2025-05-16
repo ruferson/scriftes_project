@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:skriftes_project_2/screens/screen_bar.dart';
 import 'package:skriftes_project_2/screens/settings/settings_controller.dart';
 import 'package:skriftes_project_2/services/firebase_service.dart';
 import 'package:skriftes_project_2/themes/color_repository.dart';
+import 'package:skriftes_project_2/utils/location_picker.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({super.key, required this.controller});
@@ -81,6 +83,43 @@ class ProfileView extends StatelessWidget {
                     ),
                     onPressed: () {
                       _showChangePasswordDialog(context);
+                    },
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.location_on),
+                  title: Text(
+                    'Editar ubicación',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: ColorRepository.getColor(
+                        ColorName.textColor,
+                        controller.themeMode,
+                      ),
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.edit_location,
+                      color: ColorRepository.getColor(
+                        ColorName.textColor,
+                        controller.themeMode,
+                      ),
+                    ),
+                    onPressed: () async {
+                      final LatLng? position = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => LocationPickerPage(
+                                  controller: controller,
+                                )),
+                      );
+
+                      if (position != null) {
+                        print(
+                            'Ubicación seleccionada: ${position.latitude}, ${position.longitude}');
+                        // Aquí podrías actualizar tu controller si luego lo enlazas con Firestore
+                      }
                     },
                   ),
                 ),
