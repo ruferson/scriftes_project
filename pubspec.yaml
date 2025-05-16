@@ -45,6 +45,10 @@ dependencies:
   get: ^4.6.6
   shared_preferences: ^2.2.2
   vector_graphics: ^1.1.11+1
+  flutter_map: ^8.1.1
+  latlong2: ^0.9.1
+  geocoding: ^3.0.0
+  http: ^1.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

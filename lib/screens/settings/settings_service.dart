@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skriftes_project_2/services/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsService {
   final FirebaseService _firebaseService = FirebaseService();
@@ -17,6 +18,11 @@ class SettingsService {
   Future<void> updateThemeMode(ThemeMode theme) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('themeMode', theme.toString());
+  }
+
+  // Verifica si hay un usuario autenticado
+  bool isUserLoggedIn() {
+    return FirebaseAuth.instance.currentUser != null;
   }
 
   // Obtener el nombre desde FirebaseService
