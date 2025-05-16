@@ -227,7 +227,7 @@ class _WritingAreaContentState extends State<WritingAreaContent> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   backgroundColor: ColorRepository.getColor(
-                      ColorName.primaryColor,
+                      ColorName.barColor,
                       widget.widget.controller.themeMode),
                   overlayColor: ColorRepository.getColor(
                       ColorName.secondaryTextColor,

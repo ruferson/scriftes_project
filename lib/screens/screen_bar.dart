@@ -19,10 +19,12 @@ class ScriftesScreenBar extends StatelessWidget {
     return AppBar(
       centerTitle: true,
       toolbarHeight: toolbarHeight,
-      backgroundColor:
-          ColorRepository.getColor(ColorName.barColor, controller.themeMode),
+      backgroundColor: ColorRepository.getColor(
+          ColorName.barColor, controller.themeMode),
       title: Text(title),
+      elevation: 0,
       automaticallyImplyLeading: true,
+      scrolledUnderElevation: 0,
     );
   }
 }

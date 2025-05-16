@@ -12,6 +12,7 @@ class LegalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = controller.themeMode;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(toolbarHeight),
@@ -21,27 +22,40 @@ class LegalView extends StatelessWidget {
           title: "Información legal",
         ),
       ),
-      backgroundColor: ColorRepository.getColor(
-        ColorName.primaryColor,
-        controller.themeMode,
-      ),
+      backgroundColor: ColorRepository.getColor(ColorName.primaryColor, theme),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              leading: const Icon(Icons.description),
-              title: const Text('Términos y Condiciones'),
-              onTap: () {
-                _showTermsAndConditions(context);
-              },
+            const SizedBox(height: 11),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              child: Text(
+                'Consulta las condiciones de uso y cómo protegemos tus datos.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: ColorRepository.getColor(ColorName.textColor, theme),
+                ),
+                textAlign: TextAlign.left,
+              ),
             ),
-            ListTile(
-              leading: const Icon(Icons.privacy_tip),
-              title: const Text('Política de Privacidad'),
-              onTap: () {
-                _showPrivacyPolicy(context);
-              },
+            const SizedBox(height: 20),
+            Column(
+              children: [
+                buildLegalCard(
+                  icon: Icons.description,
+                  label: 'Términos y Condiciones',
+                  onTap: () => _showTermsAndConditions(context),
+                  theme: theme,
+                ),
+                buildLegalCard(
+                  icon: Icons.privacy_tip,
+                  label: 'Política de Privacidad',
+                  onTap: () => _showPrivacyPolicy(context),
+                  theme: theme,
+                ),
+              ],
             ),
           ],
         ),
@@ -49,172 +63,200 @@ class LegalView extends StatelessWidget {
     );
   }
 
-  // Mostrar los términos y condiciones en un modal
+  Widget buildLegalCard({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    required ThemeMode theme,
+  }) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: ColorRepository.getColor(ColorName.white, theme),
+      elevation: 0,
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        leading: CircleAvatar(
+          radius: 20,
+          backgroundColor:
+              ColorRepository.getColor(ColorName.transpSpecialColor, theme),
+          child: Icon(
+            icon,
+            color: ColorRepository.getColor(ColorName.specialColor, theme),
+          ),
+        ),
+        title: Text(
+          label,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: ColorRepository.getColor(ColorName.textColor, theme),
+          ),
+        ),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: ColorRepository.getColor(ColorName.secondaryTextColor, theme),
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+
   void _showTermsAndConditions(BuildContext context) {
+    final theme = controller.themeMode;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: ColorRepository.getColor(ColorName.white, theme),
           title: Text(
             "Términos y Condiciones",
+            style: TextStyle(
+              color: ColorRepository.getColor(ColorName.textColor, theme),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  '''TÉRMINOS Y CONDICIONES DE USO DE SKRIFTE’S
+            child: Text(
+              '''
+Términos y Condiciones de Uso de Skrifte’s
 
 Fecha de entrada en vigor: 03-05-2025
 
-Por favor, lea detenidamente estos Términos y Condiciones antes de utilizar la aplicación móvil Skrifte’s (en adelante, “la App”).
+Por favor, lea atentamente estos Términos y Condiciones antes de utilizar la aplicación móvil Skrifte’s (“la App”).
 
-Al utilizar la App, usted acepta cumplir con estos Términos. Si no está de acuerdo con alguna parte de ellos, no debe utilizar la App.
+Al utilizar la App, usted acepta estos términos. Si no está de acuerdo con alguno, le recomendamos no usar la App.
 
 1. Objeto
-Skrifte’s es una aplicación de envío de cartas digitales entre amigos, que simula el envío tradicional, respetando el tiempo estimado según la distancia entre usuarios.
+Skrifte’s permite el envío de cartas digitales entre usuarios, simulando la experiencia del correo tradicional respetando tiempos basados en la distancia.
 
-2. Uso aceptable
-El usuario se compromete a utilizar la App de manera respetuosa, legal y adecuada. Está prohibido:
-- Usar la App para fines ilegales o no autorizados.
-- Enviar contenido que infrinja derechos de autor o propiedad intelectual.
-- Suplantar a otra persona o proporcionar información falsa.
-- Publicar o intercambiar contenido ofensivo, ilegal o que viole derechos de terceros.
+2. Uso adecuado
+Se prohíbe usar la App para actividades ilegales, enviar contenido protegido por derechos de autor sin permiso, suplantar identidades o compartir contenido ofensivo o ilegal.
 
-3. Registro y datos del usuario
-Para usar la App, es necesario registrarse con una dirección de correo electrónico, un nombre y una dirección postal (que puede ser ficticia o simbólica a elección del usuario), así como una contraseña. La información proporcionada es responsabilidad exclusiva del usuario.
+3. Registro y datos
+Para acceder a la App es necesario registrarse con datos personales como nombre, dirección (puede ser ficticia) y correo electrónico. Usted es responsable de la veracidad de estos datos.
 
-4. Responsabilidad del contenido
-El contenido de las cartas enviadas es responsabilidad exclusiva de los usuarios. El desarrollador de Skrifte’s no se responsabiliza del contenido compartido entre usuarios ni realiza supervisión de dicho contenido.
+4. Responsabilidad sobre contenido
+Los usuarios son responsables del contenido que envían mediante la App. El desarrollador no supervisa ni garantiza el contenido compartido.
 
 5. Limitación de responsabilidad
-Skrifte’s se proporciona “tal cual”, sin garantías de funcionamiento ininterrumpido o sin errores. El desarrollador no se hace responsable de posibles daños derivados del uso de la App.
+La App se ofrece "tal cual" sin garantías adicionales. No se responsabiliza por daños derivados de su uso o interrupciones.
 
-6. Modificaciones
-El desarrollador se reserva el derecho de modificar estos Términos en cualquier momento. Los cambios serán comunicados a través de la App. El uso continuado de la App tras las modificaciones implica la aceptación de los nuevos Términos.
+6. Cambios en términos
+El desarrollador puede modificar estos términos en cualquier momento, notificando dichos cambios a través de la App. El uso continuado implica aceptación.
 
-7. Legislación aplicable
-Estos Términos se rigen por la legislación española. En caso de conflicto, las partes se someterán a los Juzgados y Tribunales del domicilio del usuario.
+7. Legislación y jurisdicción
+Estos términos se rigen por la legislación española. Cualquier disputa se resolverá ante los tribunales del domicilio del usuario.
 
-8. Exoneración de responsabilidad por fuerza mayor
-El desarrollador no será responsable de ningún daño o perjuicio que resulte de causas fuera de su control, tales como fallos de servidor, interrupciones en la red, actos de terceros o circunstancias de fuerza mayor.
+8. Edad mínima
+La App está destinada a usuarios mayores de 14 años. Los menores requieren autorización de sus tutores.
 
-9. Edad mínima
-La App está destinada a usuarios mayores de 14 años. Los menores de edad deben contar con el consentimiento de sus tutores legales para utilizar la App.
-
-10. Terminación de cuenta
-El desarrollador se reserva el derecho de suspender o eliminar la cuenta de cualquier usuario que viole estos Términos o que realice actividades ilegales o no autorizadas.
-
-11. Resolución de disputas
-En caso de disputa, las partes intentarán resolver la controversia de manera amigable mediante mediación. Si no se alcanza un acuerdo, se someterán a los Juzgados y Tribunales del domicilio del usuario.''',
-                ),
-              ],
+Gracias por usar Skrifte’s.
+              ''',
+              style: TextStyle(
+                color: ColorRepository.getColor(ColorName.textColor, theme),
+                fontSize: 14,
+              ),
             ),
           ),
-          actions: <Widget>[
+          actions: [
             TextButton(
               child: Text(
                 "Cerrar",
                 style: TextStyle(
-                  color: ColorRepository.getColor(
-                    ColorName.specialColor,
-                    controller.themeMode,
-                  ),
+                  color:
+                      ColorRepository.getColor(ColorName.specialColor, theme),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+              onPressed: () => Navigator.of(context).pop(),
+            )
           ],
         );
       },
     );
   }
 
-  // Mostrar la política de privacidad en un modal
   void _showPrivacyPolicy(BuildContext context) {
+    final theme = controller.themeMode;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: ColorRepository.getColor(ColorName.white, theme),
           title: Text(
             "Política de Privacidad",
+            style: TextStyle(
+              color: ColorRepository.getColor(ColorName.textColor, theme),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text(
-                  '''POLÍTICA DE PRIVACIDAD DE SKRIFTE’S
+            child: Text(
+              '''
+Política de Privacidad de Skrifte’s
 
 Fecha de entrada en vigor: 03-05-2025
 
-Esta Política de Privacidad describe cómo se recopila, utiliza y protege la información personal de los usuarios de la App Skrifte’s conforme al Reglamento General de Protección de Datos (RGPD) y la legislación española vigente.
+Esta Política explica cómo recogemos, usamos y protegemos sus datos personales conforme al RGPD y la legislación española vigente.
 
-1. Responsable del tratamiento
-El responsable del tratamiento de sus datos es el desarrollador de la App Skrifte’s. Para cualquier consulta, puede contactar mediante el correo facilitado en la aplicación o la plataforma de publicación.
+1. Responsable
+El responsable del tratamiento de sus datos es el desarrollador de Skrifte’s. Puede contactarnos mediante el correo disponible en la App.
 
-2. Datos recopilados
-La App recopila los siguientes datos personales:
-- Nombre (introducido libremente por el usuario)
-- Dirección (puede ser ficticia o simbólica, a elección del usuario)
-- Correo electrónico
-- Contraseña (almacenada de forma cifrada)
+2. Datos que recogemos
+- Nombre de usuario (libremente introducido).
+- Dirección (ficticia o simbólica, elegida por el usuario).
+- Correo electrónico.
+- Contraseña cifrada.
 
-No se recopilan datos de localización real, ni acceso a cámara, micrófono u otros datos sensibles.
+No recogemos datos sensibles, ubicación real, acceso a cámara o micrófono.
 
 3. Finalidad del tratamiento
-Los datos se recopilan con las siguientes finalidades:
-- Permitir el registro e identificación del usuario.
-- Simular la entrega de cartas digitales de forma personalizada.
-- Garantizar el funcionamiento básico y seguro de la App.
-
-No se realiza perfilado ni se utilizan los datos con fines publicitarios.
+Los datos se usan para permitir el registro, identificar usuarios y garantizar la funcionalidad y seguridad de la App. No se utilizan para publicidad ni perfilado.
 
 4. Base legal
-La base legal para el tratamiento de los datos es el consentimiento del usuario al registrarse y utilizar la App.
+El tratamiento se basa en el consentimiento otorgado al registrarse y usar la App.
 
 5. Destinatarios
-Los datos no se comparten con terceros, salvo obligación legal.
+No compartimos datos con terceros, salvo obligación legal.
 
-6. Conservación de los datos
-Los datos se conservarán mientras el usuario mantenga su cuenta activa. Si el usuario solicita la eliminación de su cuenta, los datos se eliminarán permanentemente.
+6. Conservación
+Los datos se mantienen mientras la cuenta esté activa. A solicitud, se eliminarán permanentemente.
 
 7. Derechos del usuario
-Como usuario, usted tiene derecho a:
-- Acceder a sus datos personales.
-- Solicitar la rectificación o supresión.
-- Limitar u oponerse al tratamiento.
-- Solicitar la portabilidad de sus datos.
-
-Puede ejercer sus derechos contactando al desarrollador.
+Puede solicitar acceso, rectificación, supresión, limitación u oposición al tratamiento y portabilidad de sus datos contactando con el desarrollador.
 
 8. Seguridad
-Se aplican medidas técnicas y organizativas adecuadas para proteger los datos personales frente a accesos no autorizados o pérdida accidental.
+Adoptamos medidas técnicas y organizativas para proteger sus datos contra accesos no autorizados o pérdida accidental.
 
-9. Transferencia internacional de datos
-En caso de que los datos se transfieran a servidores ubicados fuera de la UE, el desarrollador garantizará que se adopten las medidas adecuadas para proteger los datos de acuerdo con la legislación vigente.
+9. Transferencias internacionales
+Si se transfieren datos fuera de la UE, garantizamos medidas adecuadas para su protección.
 
-10. Cambios en la política
-Esta política puede actualizarse en cualquier momento. Cualquier cambio será informado oportunamente a través de la App.''',
-                ),
-              ],
+10. Cambios
+La política puede actualizarse. Se notificará cualquier cambio en la App.
+
+Gracias por confiar en Skrifte’s.
+              ''',
+              style: TextStyle(
+                color: ColorRepository.getColor(ColorName.textColor, theme),
+                fontSize: 14,
+              ),
             ),
           ),
-          actions: <Widget>[
+          actions: [
             TextButton(
               child: Text(
                 "Cerrar",
                 style: TextStyle(
-                  color: ColorRepository.getColor(
-                    ColorName.specialColor,
-                    controller.themeMode,
-                  ),
+                  color:
+                      ColorRepository.getColor(ColorName.specialColor, theme),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+              onPressed: () => Navigator.of(context).pop(),
+            )
           ],
         );
       },

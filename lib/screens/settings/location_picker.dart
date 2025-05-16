@@ -120,8 +120,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
           title: 'Selecciona ubicación',
         ),
       ),
-      backgroundColor:
-          ColorRepository.getColor(ColorName.primaryColor, themeMode),
+      backgroundColor: ColorRepository.getColor(ColorName.barColor, themeMode),
       body: Column(
         children: [
           Padding(
@@ -132,7 +131,10 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               decoration: InputDecoration(
                 hintText: 'Buscar ubicación...',
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: ColorRepository.getColor(
+                  ColorName.white,
+                  themeMode,
+                ),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                 border:
@@ -141,7 +143,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               ),
             ),
           ),
-          if (_suggestions.isNotEmpty) _buildSuggestionsList(),
+          if (_suggestions.isNotEmpty) _buildSuggestionsList(themeMode),
           Expanded(child: _buildMap(themeMode)),
         ],
       ),
@@ -164,7 +166,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               child: Icon(
                 Icons.check,
                 color: ColorRepository.getColor(
-                  ColorName.white,
+                  ColorName.fullWhite,
                   themeMode,
                 ),
               ),
@@ -189,16 +191,27 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
     return const Icon(Icons.search);
   }
 
-  Widget _buildSuggestionsList() {
+  Widget _buildSuggestionsList(ThemeMode themeMode) {
     return SizedBox(
       height: 200,
       child: ListView.builder(
         itemCount: _suggestions.length,
         itemBuilder: (context, index) {
           final suggestion = _suggestions[index];
-          return ListTile(
-            title: Text(suggestion['display_name']),
-            onTap: () => _onSuggestionTap(suggestion),
+          return Container(
+            color: ColorRepository.getColor(
+                ColorName.white, themeMode), // fondo blanco fijo
+            child: ListTile(
+              title: Text(
+                suggestion['display_name'],
+                style: TextStyle(
+                    color: ColorRepository.getColor(
+                  ColorName.textColor,
+                  themeMode,
+                )), // texto visible sobre blanco
+              ),
+              onTap: () => _onSuggestionTap(suggestion),
+            ),
           );
         },
       ),
