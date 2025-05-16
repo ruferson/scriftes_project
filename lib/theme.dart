@@ -63,39 +63,48 @@ class AppTheme {
       ),
       dialogTheme: DialogTheme(
         backgroundColor: ColorRepository.getColor(
-          ColorName.secondaryColor,
+          ColorName.white,
           mode,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
         titleTextStyle: TextStyle(
-          color: ColorRepository.getColor(
-            ColorName.textColor,
-            mode,
-          ),
           fontSize: 20,
           fontWeight: FontWeight.bold,
-        ),
-        contentTextStyle: TextStyle(
           color: ColorRepository.getColor(
             ColorName.textColor,
             mode,
           ),
+        ),
+        contentTextStyle: TextStyle(
           fontSize: 16,
+          color: ColorRepository.getColor(
+            ColorName.secondaryTextColor,
+            mode,
+          ),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
-            return ColorRepository.getColor(
+          overlayColor: WidgetStateProperty.resolveWith<Color>(
+            (states) => ColorRepository.getColor(
               ColorName.transpSpecialColor,
               mode,
-            );
-          }),
-          foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-            return ColorRepository.getColor(
+            ),
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith<Color>(
+            (states) => ColorRepository.getColor(
               ColorName.textColor,
               mode,
-            );
-          }),
+            ),
+          ),
+          textStyle: WidgetStateProperty.resolveWith<TextStyle>(
+            (states) => const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
         ),
       ),
     );
